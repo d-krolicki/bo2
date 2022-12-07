@@ -1,7 +1,7 @@
 class Car:
-    def __init__(self, name, pojemnosc) -> None:
+    def __init__(self, name, capacity) -> None:
         self.name = name
-        self.pojemnosc = pojemnosc
+        self.capacity = capacity
 
 
 class Product:
@@ -20,24 +20,20 @@ class Wholesaler:
         self.prod_list[product.name] = [product.price, ilosc]
 
 
-class Sklep:
+class Shop:
     def __init__(self) -> None:
-        self.hurt = []
+        self.wholesalers = []
         self.w_pi = {}
         self.cars = []  # samochody z określoną pojemnością
 
-    def add_hurtowania(self, wholesaler: Wholesaler):
-        self.hurt.append(wholesaler)
+    def add_wholesaler(self, wholesaler: Wholesaler):
+        self.wholesalers.append(wholesaler)
 
     def add_product(self, product, demand):
         self.w_pi[product.name] = demand
 
 
-class Rozwiazanie:
+class Solution:
     def __init__(self) -> None:
         self.m_sol = [[]]  # macierz ilości produktów pobieranych z konkretnej hurtowni n x i
         self.iteration = 0  # liczba wykonanych iteracji
-
-
-def algo(self, m_sol):
-    return None
