@@ -1,11 +1,11 @@
 class Car:
-    def __init__(self, name, capacity) -> None:
+    def __init__(self, name: str, capacity: int) -> None:
         self.name = name
         self.capacity = capacity
 
 
 class Product:
-    def __init__(self, name: str, price: int):
+    def __init__(self, name: str, price: int) -> None:
         self.name = name
         self.price = price
 
@@ -16,8 +16,8 @@ class Wholesaler:
         self.trans_price = 2 * distance
         self.prod_list = {}
 
-    def add_product(self, product: Product, ilosc, price) -> None:
-        self.prod_list[product.name] = [product.price, ilosc]
+    def add_product(self, product: Product, amount: int) -> None:
+        self.prod_list[product.name] = [product.price, amount]
 
 
 class Shop:
@@ -26,10 +26,10 @@ class Shop:
         self.w_pi = {}
         self.cars = []  # samochody z określoną pojemnością
 
-    def add_wholesaler(self, wholesaler: Wholesaler):
+    def add_wholesaler(self, wholesaler: Wholesaler) -> None:
         self.wholesalers.append(wholesaler)
 
-    def add_product(self, product, demand):
+    def add_product(self, product: Product, demand: int) -> None:
         self.w_pi[product.name] = demand
 
 
