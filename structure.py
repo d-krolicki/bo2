@@ -52,6 +52,7 @@ class Solution:
 class Sample:
     def __init__(self) -> None:
         self.cost = np.inf
+        
         pass
     
     def crossover(self, parent1, parent2):
