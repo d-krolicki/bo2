@@ -24,3 +24,7 @@ for wholesaler in nasz_sklep.wholesalers:
 # pogląd danych
 print_summary(nasz_sklep)
 
+
+test = Sample()
+test.initial_sample(nasz_sklep)
+

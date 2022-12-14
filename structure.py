@@ -1,4 +1,8 @@
 import numpy as np
+from random import *
+
+
+seed(10)
 
 class Car:
     def __init__(self, name: str, capacity: int) -> None:
@@ -52,7 +56,6 @@ class Solution:
 class Sample:
     def __init__(self) -> None:
         self.cost = np.inf
-        
         pass
     
     def crossover(self, parent1, parent2):
@@ -65,7 +68,14 @@ class Sample:
 
     def objective_function(sol: Solution, shop: Shop):
         #funkcja kosztu
-        pass    
+        pass  
+
+    def initial_sample(self, shop: Shop):
+        '''
+        Tworzy pojedyńczego osobnika początkowego
+        '''
+        pass
+ 
 
 class Population:
     def __init__(self, population_size) -> None:
@@ -73,5 +83,4 @@ class Population:
         population_size = population_size
 
     def initial_population(self):
-        #populacja początkowa
-        pass    
+        pass
