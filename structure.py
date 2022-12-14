@@ -6,6 +6,7 @@ class Car:
         self.capacity = capacity
 
 
+
 class Product:
     def __init__(self, name: str, price: int, id: int) -> None:
         self.id = id
