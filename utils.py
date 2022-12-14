@@ -13,11 +13,11 @@ def print_summary(shop: Shop) -> None:
 
     print()
 
-    print("----- SHOWING WHOLESALERS, PRICES AND STOCKS -----" + '\n')
+    # print("----- SHOWING WHOLESALERS, PRICES AND STOCKS -----" + '\n')
 
-    for w in shop.wholesalers:
-        print(f"{w.name}")
-        for p in w.products.keys():
-            print(
-                f"{p.name} : {w.products[p][0]} for one piece, {w.products[p][1]} in stock.")
-        print()
+    # for w in shop.wholesalers:
+    #     print(f"{w.name}")
+    #     for p in w.products.keys():
+    #         print(
+    #             f"{p.name} : {w.products[p][0]} for one piece, {w.products[p][1]} in stock.")
+    #     print()
