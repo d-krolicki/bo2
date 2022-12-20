@@ -31,5 +31,3 @@ iniSample = test.initial_sample(nasz_sklep)
 print(iniSample.solution)
 
 
-
-
