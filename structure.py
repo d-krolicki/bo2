@@ -2,7 +2,7 @@ import numpy as np
 from random import *
 from typing import List, Tuple
 
-seed(10)
+# seed(10)
 
 
 class Car:
@@ -91,12 +91,14 @@ class Population:
         solution = []
         for car in range(n_cars):   # iteracja po ID samochodów
             solution.append([])
-            path = choices(shop.wholesalers, k=randint(0, 2*len(shop.wholesalers)))
+            path = choices(shop.wholesalers, k=randint(1, 2*len(shop.wholesalers)))
+            for _ in range(len(path)):
+                solution[car].append([])
+            i = 0
             for w in path:# iteracja po ID hurtowni
-                solution[car].append(len(path)*[])
                 for product in w.products:
-                    print(f"w.id:{w.id}")
-                    solution[car][w.id].append((product, randint(0, np.round(213.7))))
+                    solution[car][i].append((product, randint(0, np.round(213.7))))
+                i += 1
         return Sample(solution=solution)
 
     def crossover(self, parent1, parent2):
