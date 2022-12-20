@@ -25,6 +25,8 @@ for wholesaler in nasz_sklep.wholesalers:
 print_summary(nasz_sklep)
 
 
-test = Sample()
-test.initial_sample(nasz_sklep)
+test = Population(1)
+iniSample = test.initial_sample(nasz_sklep)
+
+
 
