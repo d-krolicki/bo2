@@ -31,7 +31,8 @@ class Wholesaler:
 
 class Shop:
     def __init__(self) -> None:
-        self.max_id = 0  # odnosi się do hurtowni
+        self.max_id_hurt = 0
+        self.max_id_prod = 0
         self.wholesalers = []
         self.distances = np.array([[]])
         self.products = {}
@@ -39,12 +40,12 @@ class Shop:
 
     def add_wholesaler(self, wholesaler: Wholesaler) -> None:
         self.wholesalers.append(wholesaler)
-        self.max_id += 1
+        self.max_id_hurt += 1
 
     def add_product_for_shop(self, product: Product, demand: int) -> None:
         self.products[
             product] = demand  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
-
+        self.max_id_prod += 1
     def add_car(self, car: Car):
         self.cars.append(car)
 
@@ -64,8 +65,9 @@ class Sample:
         self.cost = np.inf
         self.solution = solution
 
-    def __str__(self):
-        ret = ""
+    # def __str__(self):
+    #     ret = ""
+
 
     def mutation(self):
         # mutacje
@@ -86,11 +88,15 @@ class Population:
         Tworzy pojedyńczego osobnika początkowego
         '''
         n_cars = len(shop.cars)
-        solution = List[List[List[Tuple]]]
+        solution = []
         for car in range(n_cars):   # iteracja po ID samochodów
-            for w in sample(range(0, len(shop.wholesalers)), randint(0, 2*len(shop.wholesalers))):    # iteracja po ID hurtowni
-                for product in shop.wholesalers[w].products:
-                    solution[car][w].append((product, randint(0, np.round(213.7))))
+            solution.append([])
+            path = choices(shop.wholesalers, k=randint(0, 2*len(shop.wholesalers)))
+            for w in path:# iteracja po ID hurtowni
+                solution[car].append(len(path)*[])
+                for product in w.products:
+                    print(f"w.id:{w.id}")
+                    solution[car][w.id].append((product, randint(0, np.round(213.7))))
         return Sample(solution=solution)
 
     def crossover(self, parent1, parent2):
