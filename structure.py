@@ -65,6 +65,7 @@ class Sample:
         self.solution = solution
 
     def __str__(self):
+        ret = ""
 
     def mutation(self):
         # mutacje
