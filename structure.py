@@ -2,6 +2,7 @@ import numpy as np
 from random import *
 from typing import List, Tuple
 
+
 # seed(10)
 
 
@@ -25,8 +26,8 @@ class Wholesaler:
         self.products = {}
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
-        self.products[product] = [product.id, product.price, amount]  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
-
+        self.products[product] = [product.id, product.price,
+                                  amount]  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
 
 
 class Shop:
@@ -46,6 +47,7 @@ class Shop:
         self.products[
             product] = demand  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
         self.max_id_prod += 1
+
     def add_car(self, car: Car):
         self.cars.append(car)
 
@@ -61,13 +63,26 @@ class Solution:
 # do tego stworzymy klase population która będzie przechowywać rozmiar populacji tworzenie początkowej, i generalnie wszystkich osobników danej populacji
 # nie mam pojęcia w jakiej strukturze przechowywać dane o osobniku
 class Sample:
-    def __init__(self, solution: List[List[List[Tuple]]]) -> None:
+    def __init__(self, solution: List[List[List[Tuple]]], paths) -> None:
         self.cost = np.inf
         self.solution = solution
+        self.paths = paths  # drogi dla każdego z samochodów (lista zawierająca ID hurtowni w kolejności odwiedzania)
 
-    # def __str__(self):
-    #     ret = ""
-
+    def __str__(self):  # UWAGA działa tylko gdy liczba produktów we wszystkich hurtowniach jest taka sama
+        sol = '====================================\n'
+        for c, car in enumerate(self.solution):  # iteracja po samochodach
+            sol += f'Samochód {c + 1}\n\n'
+            sol += '{:20}'.format('Produkt \ Hurtownia')
+            for w in self.paths[c]:  # iteracja po drogach (wypisanie indeksów hurtowni)
+                sol += f'{w.id: 4} '
+            sol += '\n'
+            for p in range(len(self.solution[c][0])):  # iteracja po produktach (kolumnach)
+                sol += f'{self.solution[c][0][p][0].name:20} '
+                for h in range(len(self.paths[c])):  # iteracja po hurtowniach (wierszach)
+                    sol += f'{self.solution[c][h][p][1]:3}  '
+                sol += '\n'
+            sol += '====================================\n'
+        return sol
 
     def mutation(self):
         # mutacje
@@ -89,17 +104,19 @@ class Population:
         '''
         n_cars = len(shop.cars)
         solution = []
-        for car in range(n_cars):   # iteracja po ID samochodów
+        paths = []
+        for car in range(n_cars):  # iteracja po ID samochodów
             solution.append([])
-            path = choices(shop.wholesalers, k=randint(1, 2*len(shop.wholesalers)))
+            path = choices(shop.wholesalers, k=randint(1, 2 * len(shop.wholesalers)))
+            paths.append(path)
             for _ in range(len(path)):
                 solution[car].append([])
             i = 0
-            for w in path:# iteracja po ID hurtowni
+            for w in path:  # iteracja po ID hurtowni
                 for product in w.products:
                     solution[car][i].append((product, randint(0, np.round(213.7))))
                 i += 1
-        return Sample(solution=solution)
+        return Sample(solution=solution, paths=paths)
 
     def crossover(self, parent1, parent2):
         # krzyżowanie osobników
