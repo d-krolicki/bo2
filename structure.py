@@ -27,7 +27,7 @@ class Wholesaler:
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
         self.products[product] = [product.id, product.price,
-                                  amount]  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
+
 
 
 class Shop:
@@ -117,6 +117,7 @@ class Population:
                     solution[car][i].append((product, randint(0, np.round(213.7))))
                 i += 1
         return Sample(solution=solution, paths=paths)
+
 
     def crossover(self, parent1, parent2):
         # krzyżowanie osobników
