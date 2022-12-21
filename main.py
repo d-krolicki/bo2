@@ -10,7 +10,7 @@ nasz_sklep = Shop()
 # dodawanie produktów
 with open('Produkty.txt', 'r', encoding='utf8') as f:
     for lines in f.readlines():
-        nasz_sklep.add_product_for_shop(Product(lines[:-1], 0, nasz_sklep.max_id_prod), randint(1, 30))
+        nasz_sklep.add_product_for_shop(Product(name=lines[:-1], price=randint(3,10), id_p=nasz_sklep.max_id_prod), randint(1, 30))
 
 # dodawanie hurtowni
 with open('Hurtownie.txt', 'r', encoding='utf8') as f:

@@ -69,7 +69,7 @@ class Sample:
         self.shop = shop
         self.cost = np.inf
         self.solution = solution
-        self.paths = paths  # drogi dla każdego z samochodów (lista zawierająca hurtownie w kolejności odwiedzania)
+        self.paths = paths  # drogi dla każdego z samochodów (lista zawierająca ID hurtowni w kolejności odwiedzania)
 
     def __str__(self):  # UWAGA działa tylko gdy liczba produktów we wszystkich hurtowniach jest taka sama
         sol = '====================================\n'
@@ -92,12 +92,15 @@ class Sample:
         pass
 
     def objective_function(self):
-        temp_cost = 0.0
-        for car in self.solution:
-            for wholesaler in car:
-                for tup in wholesaler:
-                    temp_cost += tup[1]
-        return temp_cost
+        self.cost = 0.0
+        for j, car in enumerate(self.solution):
+            for i, shopping_list in enumerate(car):
+                # print(shopping_list)
+                for tup in shopping_list:
+                    # pass
+                    self.cost += tup[1] * self.paths[j][i].products[tup[0]][1]
+            # pass
+        return self.cost
 
 
 
