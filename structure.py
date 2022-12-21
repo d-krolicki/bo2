@@ -20,14 +20,14 @@ class Product:
 
 
 class Wholesaler:
-    def __init__(self, name: str, id_h: int) -> None:
+    def __init__(self, name: str, id_h: int, dist: List) -> None:
         self.id = id_h
         self.name = name
         self.products = {}
+        self.distances = dist
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
-        self.products[product] = [product.id, product.price,
-
+        self.products[product] = [product.id, product.price, amount]
 
 
 class Shop:
@@ -35,7 +35,6 @@ class Shop:
         self.max_id_hurt = 0
         self.max_id_prod = 0
         self.wholesalers = []
-        self.distances = np.array([[]])
         self.products = {}
         self.cars = []  # samochody z określoną pojemnością
 
@@ -63,7 +62,8 @@ class Solution:
 # do tego stworzymy klase population która będzie przechowywać rozmiar populacji tworzenie początkowej, i generalnie wszystkich osobników danej populacji
 # nie mam pojęcia w jakiej strukturze przechowywać dane o osobniku
 class Sample:
-    def __init__(self, solution: List[List[List[Tuple]]], paths) -> None:
+    def __init__(self, shop: Shop, solution: List[List[List[Tuple]]], paths) -> None:
+        self.shop = shop
         self.cost = np.inf
         self.solution = solution
         self.paths = paths  # drogi dla każdego z samochodów (lista zawierająca ID hurtowni w kolejności odwiedzania)
@@ -88,14 +88,18 @@ class Sample:
         # mutacje
         pass
 
-    def objective_function(sol: Solution, shop: Shop):
+    def objective_function(self):
         # funkcja kosztu
-        pass
+        for c in range(len(self.shop.cars)):
+            for w in self.paths:
+                for p in range(len(self.solution[c][0])):
+                    pass
 
 
 class Population:
-    def __init__(self, population_size) -> None:
-        population = []
+    def __init__(self, shop: Shop, population_size) -> None:
+        self.shop = shop
+        self.population = []
         self.population_size = population_size
 
     def initial_sample(self, shop: Shop):
@@ -124,4 +128,5 @@ class Population:
         pass
 
     def initial_population(self):
-        pass
+        for size in range(self.population_size):
+            self.population.append(self.initial_sample(self.shop))
