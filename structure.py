@@ -93,13 +93,26 @@ class Sample:
 
     def objective_function(self):
         self.cost = 0.0
+        print("========================================================================")
+        print("Starting delivery.")
         for j, car in enumerate(self.solution):
+            print(f"Car {j+1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            self.cost += self.paths[j][0].distances[-1]
             for i, shopping_list in enumerate(car):
                 # print(shopping_list)
                 for tup in shopping_list:
                     # pass
                     self.cost += tup[1] * self.paths[j][i].products[tup[0]][1]
+                try:
+                    print(f"Car {j+1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i+1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
+                    self.cost += self.paths[j][i].distances[self.paths[j][i + 1].id]
+                except:
+                    print(
+                        f"Car {j+1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
+                    self.cost += self.paths[j][i].distances[-1]
             # pass
+        print("Ending delivery.")
+        print("========================================================================")
         return self.cost
 
 
@@ -119,7 +132,7 @@ class Population:
         paths = []
         for car in range(n_cars):  # iteracja po ID samochodów
             solution.append([])
-            path = choices(shop.wholesalers, k=randint(1, 2 * len(shop.wholesalers)))
+            path = choices(shop.wholesalers, k=randint(1, 2))
             paths.append(path)
             for _ in range(len(path)):
                 solution[car].append([])
