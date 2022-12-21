@@ -26,8 +26,7 @@ class Wholesaler:
         self.products = {}
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
-        self.products[product] = [product.id, product.price,
-
+        self.products[product] = [product.id, product.price, amount]
 
 
 class Shop:
