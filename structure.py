@@ -24,6 +24,9 @@ class Wholesaler:
         self.id = id_h
         self.name = name
         self.products = {}
+        # @FIXME: Przy generowaniu dystansów, dystans z hurtowni A do hurtowni B
+        # @FIXME: różni się od dystansu z hurtowni B do hurtowni A. Zostawiamy tak,
+        # @FIXME: zakładając, że na przykład mogą być drogi jednokierunkowe, czy poprawiamy?
         self.distances = dist
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
@@ -66,7 +69,7 @@ class Sample:
         self.shop = shop
         self.cost = np.inf
         self.solution = solution
-        self.paths = paths  # drogi dla każdego z samochodów (lista zawierająca ID hurtowni w kolejności odwiedzania)
+        self.paths = paths  # drogi dla każdego z samochodów (lista zawierająca hurtownie w kolejności odwiedzania)
 
     def __str__(self):  # UWAGA działa tylko gdy liczba produktów we wszystkich hurtowniach jest taka sama
         sol = '====================================\n'
@@ -89,15 +92,17 @@ class Sample:
         pass
 
     def objective_function(self):
-        # funkcja kosztu
-        for c in range(len(self.shop.cars)):
-            for w in self.paths:
-                for p in range(len(self.solution[c][0])):
-                    pass
+        temp_cost = 0.0
+        for car in self.solution:
+            for wholesaler in car:
+                for tup in wholesaler:
+                    temp_cost += tup[1]
+        return temp_cost
+
 
 
 class Population:
-    def __init__(self, shop: Shop, population_size) -> None:
+    def __init__(self, shop: Shop, population_size: int) -> None:
         self.shop = shop
         self.population = []
         self.population_size = population_size
@@ -118,9 +123,9 @@ class Population:
             i = 0
             for w in path:  # iteracja po ID hurtowni
                 for product in w.products:
-                    solution[car][i].append((product, randint(0, np.round(213.7))))
+                    solution[car][i].append((product, randint(0, np.round(2))))
                 i += 1
-        return Sample(solution=solution, paths=paths)
+        return Sample(shop=shop, solution=solution, paths=paths)
 
 
     def crossover(self, parent1, parent2):
