@@ -1,3 +1,5 @@
+import random
+
 from algorithm import *
 from structure import *
 from utils import print_summary
@@ -13,6 +15,8 @@ with open('Produkty.txt', 'r', encoding='utf8') as f:
 # dodawanie hurtowni
 with open('Hurtownie.txt', 'r', encoding='utf8') as f:
     for lines in f.readlines():
+        lst = [random.randint(5, 18) for _ in range(len(f.readlines())+1)]
+        lst[nasz_sklep.max_id_hurt] = 0
         nasz_sklep.add_wholesaler(Wholesaler(lines[:-1], nasz_sklep.max_id_hurt))
 
 # dodawanie produktów do hurtowni
