@@ -14,4 +14,6 @@ wn - hurtownia n
 TO-DO:
 - crossover,
 - rozbudować funkcję celu o sprawdzanie pokrycia zapotrzebowania przy zamawianiu,
-- 
+- GUI,
+- algorytm,
+- warunki stopu algorytmu - ilość iteracji i co poza tym?
