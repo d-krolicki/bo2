@@ -48,6 +48,11 @@ if __name__ == "__main__":
     test = Population(nasz_sklep, 1)
     iniSample = test.initial_sample(nasz_sklep)
     print(iniSample)
-    for w in iniSample.shop.wholesalers:
-        print(w.distances)
-    print(iniSample.objective_function())
+    for _ in range(10000):
+        iniSample.mutation(True, False, False)
+    print(iniSample)
+    
+    # print(iniSample)
+    # for w in iniSample.shop.wholesalers:
+    #     print(w.distances)
+    # print(iniSample.objective_function())

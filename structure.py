@@ -84,13 +84,50 @@ class Sample:
             sol += '====================================\n'
         return sol
 
-    def mutation(self):
-        # mutacje
-        pass
+    def mutation(self, random_change_value: bool, random_swap: bool, add_or_sub_stop:bool):
+        '''
+        Mutacje 
+        Mamy trzy możliwości mutacji:
+        - w losowym miejsciu zmieniamy warość zakupów 
+        - wymieniamy ze sobą kolejność odwiedzania
+        - dodajemy/odejmujemy odwiedzane miejsce 
+        '''
+        if random_change_value:
+            car = randint(0, len(self.solution)-1)
+            stop_place = randint(0, len(self.solution[car])-1)
+            product = randint(0,len(self.solution[car][stop_place])-1)
+            val = randint(0, int(213.7))
+            self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0],val
+        elif random_swap:
+            car = randint(0, len(self.solution)-1)
+            stop_place_to_swap_1 = randint(0, len(self.solution[car])-1)
+            stop_place_to_swap_2 = randint(0, len(self.solution[car])-1)
+            self.solution[car][stop_place_to_swap_1], self.solution[car][stop_place_to_swap_2] = self.solution[car][stop_place_to_swap_2], self.solution[car][stop_place_to_swap_1]
+            self.paths[car][stop_place_to_swap_1], self.paths[car][stop_place_to_swap_2] = self.paths[car][stop_place_to_swap_2], self.paths[car][stop_place_to_swap_1]
+        elif add_or_sub_stop:
+            add_or_sub = randint(0,1)
+            car = randint(0, len(self.solution)-1)
+            stop_place = randint(0, len(self.solution[car]))
+            if add_or_sub:
+                wholesaler = choices(self.shop.wholesalers, k=1)[0]
+                self.solution[car].insert(stop_place, [])
+                for product in wholesaler.products:
+                    self.solution[car][stop_place].append((product, randint(0, np.round(213.7))))
+                self.paths[car].insert(stop_place, wholesaler) 
+            else:
+                if len(self.solution[car])> 1:
+                    stop_place = randint(0, len(self.solution[car])-1)
+                    del self.solution[car][stop_place]
+                    del self.paths[car][stop_place]
+        return self.solution
+        
+                
+
+
 
     def objective_function(self):
         # @FIXME: teraz dystanse dodawane są z pliku txt i trzeba poprawić odczytywanie dystansu
-        self.cost = 0.0
+        self.cost = np.inf
         print("========================================================================")
         print("Starting delivery.")
         for j, car in enumerate(self.solution):
