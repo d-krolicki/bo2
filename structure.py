@@ -24,6 +24,9 @@ class Wholesaler:
         self.id = id_h
         self.name = name
         self.products = {}
+        # @FIXME: Przy generowaniu dystansów, dystans z hurtowni A do hurtowni B
+        # @FIXME: różni się od dystansu z hurtowni B do hurtowni A. Zostawiamy tak,
+        # @FIXME: zakładając, że na przykład mogą być drogi jednokierunkowe, czy poprawiamy?
         self.distances = dist
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
@@ -126,13 +129,12 @@ class Sample:
 
 
     def objective_function(self):
-        # @FIXME: teraz dystanse dodawane są z pliku txt i trzeba poprawić odczytywanie dystansu
-        self.cost = np.inf
+        self.cost = 0.0
         print("========================================================================")
         print("Starting delivery.")
         for j, car in enumerate(self.solution):
-            print(
-                f"Car {j + 1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            print(f"Car {j+1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            # @FIXME: teraz dystanse dodawane są z pliku txt i trzeba poprawić odczytywanie dystansu
             self.cost += self.paths[j][0].distances[-1]
             for i, shopping_list in enumerate(car):
                 # print(shopping_list)
@@ -154,7 +156,7 @@ class Sample:
 
 
 class Population:
-    def __init__(self, shop: Shop, population_size) -> None:
+    def __init__(self, shop: Shop, population_size: int) -> None:
         self.shop = shop
         self.population = []
         self.population_size = population_size
@@ -168,16 +170,16 @@ class Population:
         paths = []
         for car in range(n_cars):  # iteracja po ID samochodów
             solution.append([])
-            path = choices(shop.wholesalers, k=randint(1, 2 * len(shop.wholesalers)))
+            path = choices(shop.wholesalers, k=randint(1, 2))
             paths.append(path)
             for _ in range(len(path)):
                 solution[car].append([])
             i = 0
             for w in path:  # iteracja po ID hurtowni
                 for product in w.products:
-                    solution[car][i].append((product, randint(0, np.round(213.7))))
+                    solution[car][i].append((product, randint(0, np.round(2))))
                 i += 1
-        return Sample(shop, solution=solution, paths=paths)
+        return Sample(shop=shop, solution=solution, paths=paths)
 
     def crossover(self, parent1, parent2):
         # krzyżowanie osobników
