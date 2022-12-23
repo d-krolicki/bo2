@@ -1,5 +1,5 @@
-Parówki
-Papier Toaletowy
-Herbata
-Czekolada
-Olej
+Parówki 6
+Papier_Toaletowy 15
+Herbata 10
+Czekolada 5
+Olej 12
