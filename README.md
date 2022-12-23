@@ -4,10 +4,9 @@
 ### Macierz dystansów między sklepem oraz hurtowniami
 s - sklep
 
-wn - hutrownia n
+wn - hurtownia n
 
-         s  w1 w2 w3
-    s  [ 0  x  x  x]  
-    w1 [ x  0  x  x]
-    w2 [ x  x  0  x]
-    w3 [ x  x  x  0]
+         w1 w2 w3 s
+    w1 [ 0  x  x  x]
+    w2 [ x  0  x  x]
+    w3 [ x  x  0  x]
