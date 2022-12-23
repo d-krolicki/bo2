@@ -10,3 +10,10 @@ wn - hurtownia n
     w1 [ 0  x  x  x]
     w2 [ x  0  x  x]
     w3 [ x  x  0  x]
+
+TO-DO:
+- crossover,
+- rozbudować funkcję celu o sprawdzanie pokrycia zapotrzebowania przy zamawianiu,
+- GUI,
+- algorytm,
+- warunki stopu algorytmu - ilość iteracji i co poza tym?
