@@ -46,8 +46,7 @@ class Shop:
         self.max_id_hurt += 1
 
     def add_product_for_shop(self, product: Product, demand: int) -> None:
-        self.products[
-            product] = demand  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
+        self.products[product] = demand  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
         self.max_id_prod += 1
 
     def add_car(self, car: Car):
@@ -60,10 +59,11 @@ class Solution:
         self.iteration = 0  # liczba wykonanych iteracji
 
 
-# wydaje mi się, że potrzebujemy klase osobnik w ktorej będzie wszystko tym jaka jest wartośc funcji celu dla danego osobnika,
-# mutacje w nim , crossover czyli jak powstje następny z dwóch rodziców, i struktóra mówiąca o tym jakie produkty bierzemy z danegj hurtowni
-# do tego stworzymy klase population która będzie przechowywać rozmiar populacji tworzenie początkowej, i generalnie wszystkich osobników danej populacji
-# nie mam pojęcia w jakiej strukturze przechowywać dane o osobniku
+# wydaje mi się, że potrzebujemy klase osobnik w ktorej będzie wszystko tym jaka jest wartośc funcji celu dla danego
+# osobnika, mutacje w nim , crossover czyli jak powstje następny z dwóch rodziców, i struktóra mówiąca o tym jakie
+# produkty bierzemy z danegj hurtowni do tego stworzymy klase population która będzie przechowywać rozmiar populacji
+# tworzenie początkowej, i generalnie wszystkich osobników danej populacji nie mam pojęcia w jakiej strukturze
+# przechowywać dane o osobniku
 class Sample:
     def __init__(self, shop: Shop, solution: List[List[List[Tuple]]], paths) -> None:
         self.shop = shop
@@ -87,9 +87,46 @@ class Sample:
             sol += '====================================\n'
         return sol
 
-    def mutation(self):
-        # mutacje
-        pass
+    def mutation(self, random_change_value: bool, random_swap: bool, add_or_sub_stop:bool):
+        '''
+        Mutacje 
+        Mamy trzy możliwości mutacji:
+        - w losowym miejsciu zmieniamy warość zakupów 
+        - wymieniamy ze sobą kolejność odwiedzania
+        - dodajemy/odejmujemy odwiedzane miejsce 
+        '''
+        if random_change_value:
+            car = randint(0, len(self.solution)-1)
+            stop_place = randint(0, len(self.solution[car])-1)
+            product = randint(0,len(self.solution[car][stop_place])-1)
+            val = randint(0, int(213.7))
+            self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0],val
+        elif random_swap:
+            car = randint(0, len(self.solution)-1)
+            stop_place_to_swap_1 = randint(0, len(self.solution[car])-1)
+            stop_place_to_swap_2 = randint(0, len(self.solution[car])-1)
+            self.solution[car][stop_place_to_swap_1], self.solution[car][stop_place_to_swap_2] = self.solution[car][stop_place_to_swap_2], self.solution[car][stop_place_to_swap_1]
+            self.paths[car][stop_place_to_swap_1], self.paths[car][stop_place_to_swap_2] = self.paths[car][stop_place_to_swap_2], self.paths[car][stop_place_to_swap_1]
+        elif add_or_sub_stop:
+            add_or_sub = randint(0,1)
+            car = randint(0, len(self.solution)-1)
+            stop_place = randint(0, len(self.solution[car]))
+            if add_or_sub:
+                wholesaler = choices(self.shop.wholesalers, k=1)[0]
+                self.solution[car].insert(stop_place, [])
+                for product in wholesaler.products:
+                    self.solution[car][stop_place].append((product, randint(0, np.round(213.7))))
+                self.paths[car].insert(stop_place, wholesaler) 
+            else:
+                if len(self.solution[car])> 1:
+                    stop_place = randint(0, len(self.solution[car])-1)
+                    del self.solution[car][stop_place]
+                    del self.paths[car][stop_place]
+        return self.solution
+        
+                
+
+
 
     def objective_function(self):
         self.cost = 0.0
@@ -97,6 +134,7 @@ class Sample:
         print("Starting delivery.")
         for j, car in enumerate(self.solution):
             print(f"Car {j+1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            # @FIXME: teraz dystanse dodawane są z pliku txt i trzeba poprawić odczytywanie dystansu
             self.cost += self.paths[j][0].distances[-1]
             for i, shopping_list in enumerate(car):
                 # print(shopping_list)
@@ -104,17 +142,17 @@ class Sample:
                     # pass
                     self.cost += tup[1] * self.paths[j][i].products[tup[0]][1]
                 try:
-                    print(f"Car {j+1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i+1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
+                    print(
+                        f"Car {j + 1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i + 1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
                     self.cost += self.paths[j][i].distances[self.paths[j][i + 1].id]
                 except:
                     print(
-                        f"Car {j+1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
+                        f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
                     self.cost += self.paths[j][i].distances[-1]
-            # pass
+
         print("Ending delivery.")
         print("========================================================================")
         return self.cost
-
 
 
 class Population:
@@ -124,9 +162,9 @@ class Population:
         self.population_size = population_size
 
     def initial_sample(self, shop: Shop):
-        '''
+        """
         Tworzy pojedyńczego osobnika początkowego
-        '''
+        """
         n_cars = len(shop.cars)
         solution = []
         paths = []
@@ -142,7 +180,6 @@ class Population:
                     solution[car][i].append((product, randint(0, np.round(2))))
                 i += 1
         return Sample(shop=shop, solution=solution, paths=paths)
-
 
     def crossover(self, parent1, parent2):
         # krzyżowanie osobników
