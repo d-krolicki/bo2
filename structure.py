@@ -14,7 +14,7 @@ class Car:
 
 
 class Product:
-    def __init__(self, name: str, price: int, id_p: int) -> None:
+    def __init__(self, name: str, price: float, id_p: int) -> None:
         self.id = id_p
         self.name = name
         self.price = price
@@ -28,8 +28,7 @@ class Wholesaler:
         self.distances = dist
 
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
-        self.products[product] = [product.id, product.price, amount]
-
+        self.products[product] = [product.id, product.price + round(uniform(-0.5, 0.5), 2), amount]
 
 class Shop:
     def __init__(self) -> None:
@@ -44,7 +43,7 @@ class Shop:
         self.max_id_hurt += 1
 
     def add_product_for_shop(self, product: Product, demand: int) -> None:
-        self.products[product] = demand  # tutaj jest haczyk - kluczem w slowniku musi byc obiekt klasy Product, a nie sama jego nazwa
+        self.products[product] = demand
         self.max_id_prod += 1
 
     def add_car(self, car: Car):
@@ -57,11 +56,6 @@ class Solution:
         self.iteration = 0  # liczba wykonanych iteracji
 
 
-# wydaje mi się, że potrzebujemy klase osobnik w ktorej będzie wszystko tym jaka jest wartośc funcji celu dla danego
-# osobnika, mutacje w nim , crossover czyli jak powstje następny z dwóch rodziców, i struktóra mówiąca o tym jakie
-# produkty bierzemy z danegj hurtowni do tego stworzymy klase population która będzie przechowywać rozmiar populacji
-# tworzenie początkowej, i generalnie wszystkich osobników danej populacji nie mam pojęcia w jakiej strukturze
-# przechowywać dane o osobniku
 class Sample:
     def __init__(self, shop: Shop, solution: List[List[List[Tuple]]], paths) -> None:
         self.shop = shop
@@ -124,13 +118,11 @@ class Sample:
 
 
     def objective_function(self):
-        # @FIXME: teraz dystanse dodawane są z pliku txt i trzeba poprawić odczytywanie dystansu
-        self.cost = np.inf
+        self.cost = 0.0
         print("========================================================================")
         print("Starting delivery.")
         for j, car in enumerate(self.solution):
-            print(
-                f"Car {j + 1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            print(f"Car {j+1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
             self.cost += self.paths[j][0].distances[-1]
             for i, shopping_list in enumerate(car):
                 # print(shopping_list)
@@ -152,7 +144,7 @@ class Sample:
 
 
 class Population:
-    def __init__(self, shop: Shop, population_size) -> None:
+    def __init__(self, shop: Shop, population_size: int) -> None:
         self.shop = shop
         self.population = []
         self.population_size = population_size
@@ -174,9 +166,9 @@ class Population:
             i = 0
             for w in path:  # iteracja po ID hurtowni
                 for product in w.products:
-                    solution[car][i].append((product, randint(0, np.round(213.7))))
+                    solution[car][i].append((product, randint(0, np.round(2))))
                 i += 1
-        return Sample(self.shop, solution=solution, paths=paths)
+        return Sample(shop=shop, solution=solution, paths=paths)
 
     def crossover(self, parent1, parent2):
         '''

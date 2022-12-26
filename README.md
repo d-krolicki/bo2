@@ -1,13 +1,30 @@
 # Badania operacyjne 2
 ## Hurtownia
 
+### TO-DO:
+1. Crossover
+2. Rozbudować funkcję celu o sprawdzanie pokrycia zapotrzebowania przy zamawianiu
+3. Algorytm
+4. Warunki stopu algorytmu:
+    - ilość iteracji,
+    - ocena jakości najlepszego osobnika np. poprzez prównanie do średniej populacji(?).
+5. GUI:
+    - dodawanie plików .txt: hurtownie, samochody, produkty,
+    - wykres funkcji celu (wartość w każdej iteracji),
+    - ustawianie paramterów:
+         - prawdopodobieństwo mutacji/krzyżówki,
+         - liczebność populacji,
+         - ilość iteracji (warunek stopu),
+         - ocena jakości najlepszego osobnika (warunek stopu)(?).
+
+
 ### Macierz dystansów między sklepem oraz hurtowniami
 s - sklep
 
-wn - hutrownia n
+wn - hurtownia n
 
-         s  w1 w2 w3
-    s  [ x  0  x  x]  
-    w1 [ x  0  x  x]
-    w2 [ x  x  0  x]
-    w3 [ x  x  x  0]
+         w1 w2 w3 s
+    w1 [ 0  x  x  x]
+    w2 [ x  0  x  x]
+    w3 [ x  x  0  x]
+
