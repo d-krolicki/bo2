@@ -46,11 +46,12 @@ if __name__ == "__main__":
     # print_summary(nasz_sklep)
 
     test = Population(nasz_sklep, 1)
-    iniSample = test.initial_sample(nasz_sklep)
-    print(iniSample)
-    for _ in range(10000):
-        iniSample.mutation(True, False, False)
-    print(iniSample)
+    iniSample1 = test.initial_sample()
+    iniSample2 = test.initial_sample()
+    print(iniSample1)
+    print(iniSample2)
+    print(test.crossover(iniSample1, iniSample2)[0])
+    print(test.crossover(iniSample1, iniSample2)[1])
     
     # print(iniSample)
     # for w in iniSample.shop.wholesalers:
