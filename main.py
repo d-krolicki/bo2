@@ -15,7 +15,7 @@ with open('Produkty.txt', 'r', encoding='utf8') as f:
         if lines:
             prodMat.append([val.replace("_", " ") if count == 0 else int(val) for count, val in enumerate(lines)])
     for product in prodMat:
-        nasz_sklep.add_product_for_shop(Product(name=product[0], price=product[1], id_p=nasz_sklep.max_id_prod), randint(1, 30))
+        nasz_sklep.add_product_for_shop(Product(name=product[0], price=product[1], id_p=nasz_sklep.max_id_prod), randint(1, 4))
 
 # dodawanie macierzy odległości
 with open('distances.txt', 'r', encoding='utf8') as f:
@@ -54,10 +54,10 @@ if __name__ == "__main__":
     test = Population(nasz_sklep, 1)
     iniSample1 = test.initial_sample()
     iniSample2 = test.initial_sample()
-    print(iniSample1)
-    print(iniSample2)
-    print(test.crossover(iniSample1, iniSample2)[0])
-    print(test.crossover(iniSample1, iniSample2)[1])
+    # print(iniSample1)
+    # print(iniSample2)
+    # print(test.crossover(iniSample1, iniSample2)[0])
+    # print(test.crossover(iniSample1, iniSample2)[1])
     
     # print(iniSample)
     # for _ in range(10000):
@@ -69,7 +69,7 @@ if __name__ == "__main__":
     #        print(f"{product.name} : {wholesaler.products[product][0]}, {wholesaler.products[product][1]}, {wholesaler.products[product][2]}")
     #    print()
 
-    # print(iniSample)
-    # for w in iniSample.shop.wholesalers:
+    print(iniSample1)
+    # for w in iniSample1.shop.wholesalers:
     #    print(w.distances)
-    # print(round(iniSample.objective_function(), 3))
+    print(round(iniSample1.objective_function(), 3))

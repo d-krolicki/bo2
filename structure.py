@@ -1,7 +1,7 @@
 import numpy as np
 from random import *
 from typing import List, Tuple
-from copy import copy
+import copy
 
 
 # seed(10)
@@ -240,7 +240,7 @@ class Sample:
                     del self.paths[car][stop_place]
         return self.solution
 
-    def objective_function(self) -> float:
+    def objective_function(self, punish_val: int = 30) -> float:
         """
         Method handling calculation of the sample solution's objective function value.
 
@@ -248,29 +248,53 @@ class Sample:
 
         :return: Objective function value for the given sample solution.
         """
+
+        """
+        @ TODO:
+        - sprawdzanie pokrycia zapotrzebowania,
+        - funkcja kary:
+            - kiedy kupimy zbyt mało lub zbyt dużo w kwestii zapotrzebowania,
+            - kiedy kupimy zbyt dużo i przeładujemy samochód.
+        """
+        demand = copy.copy(self.shop.products)
         self.cost = 0.0
-        # print("========================================================================")
-        # print("Starting delivery.")
+        print("========================================================================")
+        print("Starting delivery.")
         for j, car in enumerate(self.solution):
-            # print(
-            #     f"Car {j + 1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            car_capacity = self.shop.cars[j].capacity
+            returns = 0
+            sum_weight_of_prod = 0
+            print(
+                f"Car {j + 1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
             self.cost += self.paths[j][0].distances[-1]
             for i, shopping_list in enumerate(car):
                 # print(shopping_list)
                 for tup in shopping_list:
                     # pass
                     self.cost += tup[1] * self.paths[j][i].products[tup[0]][1]
+                    demand[tup[0]] -= tup[1]
+                    sum_weight_of_prod += tup[1]
                 try:
-                    # print(
-                    #     f"Car {j + 1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i + 1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
+                    print(
+                        f"Car {j + 1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i + 1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
                     self.cost += self.paths[j][i].distances[self.paths[j][i + 1].id]
                 except:
-                    # print(
-                    #     f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
+                    print(
+                        f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
                     self.cost += self.paths[j][i].distances[-1]
+                returns = sum_weight_of_prod // car_capacity
+                if returns > 0:
+                    sum_weight_of_prod = sum_weight_of_prod % car_capacity
+                print(f"Returns in shop {self.paths[j][i].id} : {returns}")
+                self.cost += returns * self.paths[j][0].distances[-1]
+        for index, value in enumerate(demand.values()):
+            self.cost += abs(value) * punish_val
+            print(f"Penalty function value for product: {abs(value) * punish_val} ")
 
-        # print("Ending delivery.")
-        # print("========================================================================")
+                    # @TODO: zmienic jak nie bedzie dzialac - dostosowac parametry
+        print(f"{[self.shop.products[key] for key in self.shop.products.keys()]}")
+        print("Ending delivery.")
+        print("========================================================================")
         return self.cost
 
 
