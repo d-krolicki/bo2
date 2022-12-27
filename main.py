@@ -52,18 +52,24 @@ if __name__ == "__main__":
     # print_summary(nasz_sklep)
 
     test = Population(nasz_sklep, 1)
-    iniSample = test.initial_sample(nasz_sklep)
+    iniSample1 = test.initial_sample()
+    iniSample2 = test.initial_sample()
+    print(iniSample1)
+    print(iniSample2)
+    print(test.crossover(iniSample1, iniSample2)[0])
+    print(test.crossover(iniSample1, iniSample2)[1])
+    
     # print(iniSample)
     # for _ in range(10000):
     #     iniSample.mutation(True, False, False)
     # print(iniSample)
 
-    for wholesaler in iniSample.shop.wholesalers:
-        for product in nasz_sklep.products:
-            print(f"{product.name} : {wholesaler.products[product][0]}, {wholesaler.products[product][1]}, {wholesaler.products[product][2]}")
-        print()
+    # for wholesaler in iniSample.shop.wholesalers:
+    #    for product in nasz_sklep.products:
+    #        print(f"{product.name} : {wholesaler.products[product][0]}, {wholesaler.products[product][1]}, {wholesaler.products[product][2]}")
+    #    print()
 
-    print(iniSample)
-    for w in iniSample.shop.wholesalers:
-        print(w.distances)
-    print(round(iniSample.objective_function(), 3))
+    # print(iniSample)
+    # for w in iniSample.shop.wholesalers:
+    #    print(w.distances)
+    # print(round(iniSample.objective_function(), 3))

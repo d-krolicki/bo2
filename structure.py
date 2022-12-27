@@ -1,6 +1,7 @@
 import numpy as np
 from random import *
 from typing import List, Tuple
+from copy import copy
 
 
 # seed(10)
@@ -290,20 +291,21 @@ class Population:
         self.shop = shop
         self.population = []
         self.population_size = population_size
+        self.generation_counter = 1
 
-    def initial_sample(self, shop: Shop):
+    def initial_sample(self):
         """
         Method handling creation of one initial sample solution.
 
         :param shop: Shop for which the sample solution is being generated.
         :return: None
         """
-        n_cars = len(shop.cars)
+        n_cars = len(self.shop.cars)
         solution = []
         paths = []
         for car in range(n_cars):  # iteracja po ID samochodów
             solution.append([])
-            path = choices(shop.wholesalers, k=randint(1, 2))
+            path = choices(self.shop.wholesalers, k=randint(1, 2 * len(self.shop.wholesalers)))
             paths.append(path)
             for _ in range(len(path)):
                 solution[car].append([])
@@ -317,12 +319,47 @@ class Population:
     def crossover(self, parent1, parent2):
         """
         Method handling crossover of two sample solutions.
+        
+        How it works:
+        Parents:
+        11111111
+        00000000
+        Children:
+        11100000
+        00011111
 
         :param parent1: First sample solution used to generate a new sample solution.
         :param parent2: Second sample solution used to generate a new sample solution.
         :return: None
         """
-        pass
+
+        child1 = []
+        child2 = []
+        path_child1 = []
+        path_child2 = []
+        for car in range(len(parent1.solution)):
+            child1.append([]), child2.append([]),path_child1.append([]), path_child2.append([])
+            cross_place = randint(0, min(len(parent1.solution[car]), len(parent2.solution[car])))
+            for _ in range(len(parent1.solution[car])): child1[car].append([]),path_child1[car].append([])
+            for _ in range(len(parent2.solution[car])): child2[car].append([]),path_child2[car].append([]) 
+
+            for i in range(len(parent1.solution[car])):
+                if i <= cross_place and i < len(parent2.solution[car]):
+                    child1[car][i] = parent2.solution[car][i]
+                    path_child1[car][i] = parent2.paths[car][i]
+                else:
+                    child1[car][i] = parent1.solution[car][i] 
+                    path_child1[car][i] = parent1.paths[car][i] 
+            for i in range(len(parent2.solution[car])):
+                if i <= cross_place and i < len(parent1.solution[car]):
+                    child2[car][i] = parent1.solution[car][i]
+                    path_child2[car][i] = parent1.paths[car][i]
+                else:
+                    child2[car][i] = parent2.solution[car][i] 
+                    path_child2[car][i] = parent2.paths[car][i]
+        child1 = Sample(self.shop, child1, path_child1)
+        child2 = Sample(self.shop, child2, path_child2)
+        return child1, child2
 
     def initial_population(self):
         """
