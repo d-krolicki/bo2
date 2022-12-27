@@ -1,5 +1,6 @@
 from structure import *
 from random import randint
+import matplotlib.pyplot as plt
 
 """
 Wydaje mi sie, ze powinno przyjmowac argument po prostu obiekt typu Shop, a zwracac obiekt typu Solution.
@@ -11,11 +12,12 @@ MUTATION_PROBABILITY_VISIT_ORDER = 0.01
 MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.2
 
 
-def algo(shop: Shop, iterationStop: int = 5000, populationSize: int = 150) -> Solution:
+def algo(shop: Shop, iterationStop: int = 100, populationSize: int = 100, penaltyVal: int = 10) -> Solution:
+    toplot = []
     test = Population(shop, populationSize)
     test.initial_population()
     for s in range(populationSize):
-        test.population[s].objective_function()
+        test.population[s].objective_function(penaltyVal)
 
     for i in range(iterationStop):
         test.sort()
@@ -46,8 +48,11 @@ def algo(shop: Shop, iterationStop: int = 5000, populationSize: int = 150) -> So
                 test.population[s].mutation(False, False, True)
 
         for s in range(populationSize):
-            test.population[s].objective_function()
+            test.population[s].objective_function(penaltyVal)
         test.sort()
-        print(test.population[0].cost)
+        toplot.append(test.population[0].cost)
+
+    plt.plot(toplot)
+    plt.show()
 
     return test.population[0].cost

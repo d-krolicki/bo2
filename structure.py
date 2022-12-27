@@ -242,7 +242,7 @@ class Sample:
                     del self.paths[car][stop_place]
         return self.solution
 
-    def objective_function(self, punish_val: int = 30) -> float:
+    def objective_function(self, penalty_val: int = 10) -> float:
         """
         Method handling calculation of the sample solution's objective function value.
 
@@ -291,7 +291,7 @@ class Sample:
                 # print(f"Returns in shop {self.paths[j][i].id} : {returns}")
                 self.cost += returns * self.paths[j][0].distances[-1]
         for index, value in enumerate(demand.values()):
-            self.cost += abs(value) * punish_val
+            self.cost += abs(value) * penalty_val
             # print(f"Penalty function value for product: {abs(value) * punish_val} ")
 
             # @TODO: zmienic jak nie bedzie dzialac - dostosowac parametry
