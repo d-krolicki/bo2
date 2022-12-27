@@ -141,6 +141,7 @@ class Solution:
     """
     @FIXME: Czy my będziemy tego używać?
     """
+
     def __init__(self) -> None:
         self.m_sol = np.array([])  # macierz ilości produktów pobieranych z konkretnej hurtowni n x i
         self.iteration = 0  # liczba wykonanych iteracji
@@ -168,6 +169,7 @@ class Sample:
             Custom form representing paths taken by different cars to complete the orders.
             The outermost list contains lists of wholesalers' ID following the specific car's visiting order.
     """
+
     def __init__(self, shop: Shop, solution: List[List[List[Tuple]]], paths) -> None:
         self.shop = shop
         self.cost = np.inf
@@ -256,16 +258,17 @@ class Sample:
             - kiedy kupimy zbyt mało lub zbyt dużo w kwestii zapotrzebowania,
             - kiedy kupimy zbyt dużo i przeładujemy samochód.
         """
+        # TODO sprawdzanie czy produkty są w hurtowni
         demand = copy.copy(self.shop.products)
         self.cost = 0.0
-        print("========================================================================")
-        print("Starting delivery.")
+        # print("========================================================================")
+        # print("Starting delivery.")
         for j, car in enumerate(self.solution):
             car_capacity = self.shop.cars[j].capacity
             returns = 0
             sum_weight_of_prod = 0
-            print(
-                f"Car {j + 1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
+            # print(
+            #     f"Car {j + 1} starts by visiting wholesaler {self.paths[j][0].id}, cost equals {self.paths[j][0].distances[-1]}.")
             self.cost += self.paths[j][0].distances[-1]
             for i, shopping_list in enumerate(car):
                 # print(shopping_list)
@@ -275,26 +278,26 @@ class Sample:
                     demand[tup[0]] -= tup[1]
                     sum_weight_of_prod += tup[1]
                 try:
-                    print(
-                        f"Car {j + 1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i + 1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
+                    # print(
+                    #     f"Car {j + 1} is driving from wholesaler {self.paths[j][i].id} to wholesaler {self.paths[j][i + 1].id}, cost equals {self.paths[j][i].distances[self.paths[j][i + 1].id]}.")
                     self.cost += self.paths[j][i].distances[self.paths[j][i + 1].id]
                 except:
-                    print(
-                        f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
+                    # print(
+                        # f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
                     self.cost += self.paths[j][i].distances[-1]
                 returns = sum_weight_of_prod // car_capacity
                 if returns > 0:
                     sum_weight_of_prod = sum_weight_of_prod % car_capacity
-                print(f"Returns in shop {self.paths[j][i].id} : {returns}")
+                # print(f"Returns in shop {self.paths[j][i].id} : {returns}")
                 self.cost += returns * self.paths[j][0].distances[-1]
         for index, value in enumerate(demand.values()):
             self.cost += abs(value) * punish_val
-            print(f"Penalty function value for product: {abs(value) * punish_val} ")
+            # print(f"Penalty function value for product: {abs(value) * punish_val} ")
 
-                    # @TODO: zmienic jak nie bedzie dzialac - dostosowac parametry
-        print(f"{[self.shop.products[key] for key in self.shop.products.keys()]}")
-        print("Ending delivery.")
-        print("========================================================================")
+            # @TODO: zmienic jak nie bedzie dzialac - dostosowac parametry
+        # print(f"{[self.shop.products[key] for key in self.shop.products.keys()]}")
+        # print("Ending delivery.")
+        # print("========================================================================")
         return self.cost
 
 
@@ -311,6 +314,7 @@ class Population:
         population_size : int
             Size of the generated initial population of sample solutions.
     """
+
     def __init__(self, shop: Shop, population_size: int) -> None:
         self.shop = shop
         self.population = []
@@ -368,24 +372,24 @@ class Population:
         path_child1 = []
         path_child2 = []
         for car in range(len(parent1.solution)):
-            child1.append([]), child2.append([]),path_child1.append([]), path_child2.append([])
+            child1.append([]), child2.append([]), path_child1.append([]), path_child2.append([])
             cross_place = randint(0, min(len(parent1.solution[car]), len(parent2.solution[car])))
-            for _ in range(len(parent1.solution[car])): child1[car].append([]),path_child1[car].append([])
-            for _ in range(len(parent2.solution[car])): child2[car].append([]),path_child2[car].append([]) 
+            for _ in range(len(parent1.solution[car])): child1[car].append([]), path_child1[car].append([])
+            for _ in range(len(parent2.solution[car])): child2[car].append([]), path_child2[car].append([])
 
             for i in range(len(parent1.solution[car])):
                 if i <= cross_place and i < len(parent2.solution[car]):
                     child1[car][i] = parent2.solution[car][i]
                     path_child1[car][i] = parent2.paths[car][i]
                 else:
-                    child1[car][i] = parent1.solution[car][i] 
-                    path_child1[car][i] = parent1.paths[car][i] 
+                    child1[car][i] = parent1.solution[car][i]
+                    path_child1[car][i] = parent1.paths[car][i]
             for i in range(len(parent2.solution[car])):
                 if i <= cross_place and i < len(parent1.solution[car]):
                     child2[car][i] = parent1.solution[car][i]
                     path_child2[car][i] = parent1.paths[car][i]
                 else:
-                    child2[car][i] = parent2.solution[car][i] 
+                    child2[car][i] = parent2.solution[car][i]
                     path_child2[car][i] = parent2.paths[car][i]
         child1 = Sample(self.shop, child1, path_child1)
         child2 = Sample(self.shop, child2, path_child2)
@@ -398,4 +402,19 @@ class Population:
         :return: None
         """
         for size in range(self.population_size):
-            self.population.append(self.initial_sample(self.shop))
+            self.population.append(self.initial_sample())
+
+    def fill_population(self):
+        """
+        Fill population to population size
+        :return:
+        """
+
+        while len(self.population) < 100:
+            self.population.append(self.initial_sample())
+
+    def sort(self):
+        lst = copy.copy(self.population)
+        lst_sorted = sorted(lst, key=lambda sample: sample.cost)
+        self.population = lst_sorted
+        # print(self.population[0])
