@@ -314,22 +314,28 @@ class Population:
                 for product in w.products:
                     solution[car][i].append((product, randint(0, np.round(2))))
                 i += 1
-        return Sample(shop=shop, solution=solution, paths=paths)
+        return Sample(shop=self.shop, solution=solution, paths=paths)
 
     def crossover(self, parent1, parent2):
         """
         Method handling crossover of two sample solutions.
         
-        How it works:
-        Parents:
+        How it works
+        ------------
+        **Parents**:
+
         11111111
+
         00000000
-        Children:
+
+        **Children**:
+
         11100000
+
         00011111
 
-        :param parent1: First sample solution used to generate a new sample solution.
-        :param parent2: Second sample solution used to generate a new sample solution.
+        :param **parent1**: First sample solution used to generate a new sample solution.
+        :param **parent2**: Second sample solution used to generate a new sample solution.
         :return: None
         """
 
