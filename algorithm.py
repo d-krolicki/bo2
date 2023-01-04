@@ -6,23 +6,24 @@ import matplotlib.pyplot as plt
 Wydaje mi sie, ze powinno przyjmowac argument po prostu obiekt typu Shop, a zwracac obiekt typu Solution.
 """
 
-CROSSOVER_PROBABILITY = 0.9
-MUTATION_PROBABILITY_SWAP_AMOUNT = 0.01
-MUTATION_PROBABILITY_VISIT_ORDER = 0.01
-MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.2
+CROSSOVER_PROBABILITY = 0.98
+MUTATION_PROBABILITY_SWAP_AMOUNT = 0.0005
+MUTATION_PROBABILITY_VISIT_ORDER = 0.005
+MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.0005
 
 
-def algo(shop: Shop, iterationStop: int = 100, populationSize: int = 100, penaltyVal: int = 10) -> Solution:
+def algo(shop: Shop, iterationStop: int = 1000, populationSize: int = 50, penaltyVal: int = 10) -> Solution:
     toplot = []
     test = Population(shop, populationSize)
     test.initial_population()
     for s in range(populationSize):
         test.population[s].objective_function(penaltyVal)
-
+    test.sort()   
     for i in range(iterationStop):
-        test.sort()
+        
+        
         newPopulation = []
-        for s in range(populationSize-1):
+        for s in range(0,int((populationSize-1))):
             crossP = random()
 
             if crossP < CROSSOVER_PROBABILITY:
@@ -31,6 +32,7 @@ def algo(shop: Shop, iterationStop: int = 100, populationSize: int = 100, penalt
                 newPopulation.append(child1)
                 newPopulation.append(child2)
         test.population = newPopulation
+        print(i) 
         test.fill_population()
 
         for s in range(populationSize):
@@ -49,6 +51,7 @@ def algo(shop: Shop, iterationStop: int = 100, populationSize: int = 100, penalt
 
         for s in range(populationSize):
             test.population[s].objective_function(penaltyVal)
+        
         test.sort()
         toplot.append(test.population[0].cost)
 

@@ -211,7 +211,7 @@ class Sample:
             car = randint(0, len(self.solution) - 1)
             stop_place = randint(0, len(self.solution[car]) - 1)
             product = randint(0, len(self.solution[car][stop_place]) - 1)
-            val = randint(0, int(213.7))
+            val = randint(0, int(100))
             self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0], val
         elif random_swap:
             car = randint(0, len(self.solution) - 1)
@@ -340,7 +340,7 @@ class Population:
             i = 0
             for w in path:  # iteracja po ID hurtowni
                 for product in w.products:
-                    solution[car][i].append((product, randint(0, np.round(2))))
+                    solution[car][i].append((product, randint(0, np.round(200))))
                 i += 1
         return Sample(shop=self.shop, solution=solution, paths=paths)
 
@@ -410,7 +410,7 @@ class Population:
         :return:
         """
 
-        while len(self.population) < 100:
+        while len(self.population) < self.population_size:
             self.population.append(self.initial_sample())
 
     def sort(self):

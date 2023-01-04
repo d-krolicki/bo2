@@ -15,7 +15,7 @@ with open('Produkty.txt', 'r', encoding='utf8') as f:
         if lines:
             prodMat.append([val.replace("_", " ") if count == 0 else int(val) for count, val in enumerate(lines)])
     for product in prodMat:
-        nasz_sklep.add_product_for_shop(Product(name=product[0], price=product[1], id_p=nasz_sklep.max_id_prod), randint(1, 200))
+        nasz_sklep.add_product_for_shop(Product(name=product[0], price=product[1], id_p=nasz_sklep.max_id_prod), randint(1, 100))
 
 # dodawanie macierzy odległości
 with open('distances.txt', 'r', encoding='utf8') as f:
@@ -48,7 +48,7 @@ for wholesaler in nasz_sklep.wholesalers:
 # ustalanie cen w hurtowniach
 
 if __name__ == "__main__":
-    algo(nasz_sklep)
+    algo(nasz_sklep,penaltyVal=5)
 
     # test = Population(nasz_sklep, 3)
     # test.initial_population()
