@@ -6,10 +6,11 @@ import matplotlib.pyplot as plt
 Wydaje mi sie, ze powinno przyjmowac argument po prostu obiekt typu Shop, a zwracac obiekt typu Solution.
 """
 
-CROSSOVER_PROBABILITY = 0.98
-MUTATION_PROBABILITY_SWAP_AMOUNT = 0.5
-MUTATION_PROBABILITY_VISIT_ORDER = 0.5
-MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.5
+CROSSOVER_PROBABILITY = 0.5
+MUTATION_PROBABILITY_SWAP_AMOUNT = 0.01
+MUTATION_PROBABILITY_VISIT_ORDER = 0.01
+MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.01
+COUNTER = 0
 
 
 def algo(shop: Shop, iterationStop: int = 1000, populationSize: int = 50, penaltyVal: int = 10) -> Solution:
@@ -60,7 +61,7 @@ def algo(shop: Shop, iterationStop: int = 1000, populationSize: int = 50, penalt
     return test.population[0].cost
 
 
-def algo2(shop: Shop, iterationStop: int = 1000, changesInPopulation: int = 50, populationSize: int = 50,
+def algo2(shop: Shop, iterationStop: int = 50, changesInPopulationValue: int = 80, populationSize: int = 100,
           penaltyVal: int = 10) -> Solution:
     test = Population(shop, populationSize)  # inicjalizowanie polulacji
     test.initial_population()  # tworzenie pierwszej poplacji losowej
@@ -68,6 +69,7 @@ def algo2(shop: Shop, iterationStop: int = 1000, changesInPopulation: int = 50, 
     toplot = []
 
     while iterationStop > 0:  # liczba iteracji STOP
+        changesInPopulation = changesInPopulationValue
         while changesInPopulation > 0:  # liczba podjętych prób zmian w populacji
             calculate_cost_fun(test, penaltyVal)  # obliczanie funkcji celu do osobników oraz sortowanie
 
@@ -77,45 +79,42 @@ def algo2(shop: Shop, iterationStop: int = 1000, changesInPopulation: int = 50, 
             mutation3P = random()
             crossoverP = random()
 
-            # Muszę zapisać co tutaj się dzieje bo potem nikt nie ogarnie.
-            # Takie podejście jest konieczne, ponieważ operacje mutacji oraz obliczania funkcji celu jest możliwe tylko
-            # dla osobników w populacji.
             if mutation1P < MUTATION_PROBABILITY_SWAP_AMOUNT:  # czy mutacja ma się wykonać?
                 s = fractional_probability(test)  # wybieranie osobnika do mutacji
                 tempSample = copy.deepcopy(test.population[s])  # skopiowanie osobnika
-                test.population.append(tempSample)  # dodanie go na koniec listy
-                test.population_size += 1
-                test.population[-1].mutation(True, False,
-                                             False)  # dokonanie mutacji na ostatnim osobniku (kopia wybranego)
-                calculate_cost_fun(test, penaltyVal)  # obliczanie funkcji celu oraz sortowanie
-                test.population_size -= 1
-                test.population = test.population[:-1]  # odrzucanie najgorszego osobnika
+                tempSample.mutation(True, False, False)  # wykonanie mutacji osobnika
+                tempSample.objective_function(penaltyVal)  # obliczenie jego funkcji celu
+                if tempSample.cost < test.population[-1].cost:  # dodanie do populacji jeśli jest lepszy od najgorszego
+                    test.population[-1] = tempSample
+                test.sort()  # sortowanie
 
             if mutation2P < MUTATION_PROBABILITY_VISIT_ORDER:
                 s = fractional_probability(test)
                 tempSample = copy.deepcopy(test.population[s])
-                test.population.append(tempSample)
-                test.population_size += 1
-                test.population[-1].mutation(False, True, False)
-                calculate_cost_fun(test, penaltyVal)
-                test.population_size -= 1
-                test.population = test.population[:-1]
+                tempSample.mutation(False, True, False)
+                tempSample.objective_function(penaltyVal)
+                if tempSample.cost < test.population[-1].cost:
+                    test.population[-1] = tempSample
+                test.sort()
 
             if mutation3P < MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT:
                 s = fractional_probability(test)
                 tempSample = copy.deepcopy(test.population[s])
-                test.population.append(tempSample)
-                test.population_size += 1
-                test.population[-1].mutation(False, False, True)
-                calculate_cost_fun(test, penaltyVal)
-                test.population_size -= 1
-                test.population = test.population[:-1]
+                tempSample.mutation(False, False, True)
+                tempSample.objective_function(penaltyVal)
+                if tempSample.cost < test.population[-1].cost:
+                    test.population[-1] = tempSample
+                test.sort()
 
             # if crossoverP < CROSSOVER_PROBABILITY:
             #     s1 = fractional_probability(test)
             #     s2 = fractional_probability(test)
             #     child1, child2 = test.crossover(test.population[s1], test.population[s2])
-            #     test.population.append(child1)
+            #     print(child1)
+            #     print(child2)
+            #     child1.objective_function(penaltyVal)
+            #     child2.objective_function(penaltyVal)
+            #
             #     test.population.append(child2)
             #     test.population_size += 2
             #     calculate_cost_fun(test, penaltyVal)
@@ -125,7 +124,6 @@ def algo2(shop: Shop, iterationStop: int = 1000, changesInPopulation: int = 50, 
             calculate_cost_fun(test, penaltyVal)
             changesInPopulation -= 1
 
-        print(test.population[0].cost)
         toplot.append(test.population[0].cost)
         iterationStop -= 1
 
