@@ -10,7 +10,7 @@ root.title('Sklep')
 # root.resizable(width=False, height=False)  # rozmiar okna jest stały
 
 window_height = 500
-window_width = 800
+window_width = 1200
 root.geometry("{}x{}".format(window_width, window_height))
 
 
@@ -73,11 +73,13 @@ def get_params() -> None:
 
 # Frames
 paramsFrame = ttk.LabelFrame(root, text='Parametry', width=250, height=360)
-paramsFrame.place(x=20, y=12)
+paramsFrame.place(x=400, y=12)
 propFrame = ttk.LabelFrame(paramsFrame, text='Prawdopodobieństwo', width=200, height=215)
 propFrame.place(x=20, y=15)
-dataFrame = ttk.LabelFrame(root, text='Dane', width=400, height=480)
-dataFrame.place(x=300, y=12)
+dataFrame = ttk.LabelFrame(root, text='Dane', width=355, height=480)
+dataFrame.place(x=20, y=12)
+algoFrame = ttk.LabelFrame(root, text='Algorytm', width=250, height=100)
+algoFrame.place(x=400, y=390)
 
 # Labels
 ttk.Label(propFrame, text="Mutacji 1").place(x=20, y=15)
@@ -191,41 +193,39 @@ def browser_distances():
 def browser_all():
     global hurtownie, cars, products, distances
     if not hurtownie:
-        with open('hurtownie.txt', mode="r", encoding="utf-8") as input_file:
+        with open('Data/Hurtownie.txt', mode="r", encoding="utf-8") as input_file:
             scrtextW.configure(state='normal')
             for line in input_file.readlines():
                 scrtextW.insert(tk.INSERT, line)
             scrtextW.configure(state='disabled')
-    pathW.configure(text='Filepath: ' + '.../hurtownie.txt')
+    pathW.configure(text='Filepath: ' + 'Data/hurtownie.txt')
 
     if not cars:
-        with open('cars.txt', mode="r", encoding="utf-8") as input_file:
+        with open('Data/cars.txt', mode="r", encoding="utf-8") as input_file:
             scrtextC.configure(state='normal')
             for line in input_file.readlines():
                 scrtextC.insert(tk.INSERT, line)
             scrtextC.configure(state='disabled')
-    pathC.configure(text='Filepath: ' + '.../cars.txt')
+    pathC.configure(text='Filepath: ' + 'Data/cars.txt')
 
     if not products:
-        with open('produkty.txt', mode="r", encoding="utf-8") as input_file:
+        with open('Data/Produkty.txt', mode="r", encoding="utf-8") as input_file:
             scrtextP.configure(state='normal')
             for line in input_file.readlines():
                 scrtextP.insert(tk.INSERT, line)
             scrtextP.configure(state='disabled')
-    pathP.configure(text='Filepath: ' + '.../produkty.txt')
+    pathP.configure(text='Filepath: ' + 'Data/produkty.txt')
 
     if not distances:
-        with open('distances.txt', mode="r", encoding="utf-8") as input_file:
+        with open('Data/distances.txt', mode="r", encoding="utf-8") as input_file:
             scrtextD.configure(state='normal')
             for line in input_file.readlines():
                 scrtextD.insert(tk.INSERT, line)
             scrtextD.configure(state='disabled')
-    pathD.configure(text='Filepath: ' + '.../distances.txt')
+    pathD.configure(text='Filepath: ' + 'Data/distances.txt')
 
 
 # Buttons
-get_paramsB = ttk.Button(root, text='Zapisz parametry', style='Accentbutton', command=get_params)
-get_paramsB.place(x=80, y=400)
 get_wholB = ttk.Button(dataFrame, text='Wgraj hurtownie', style='Accentbutton', command=browser_wholsel, width=16)
 get_wholB.place(x=20, y=15)
 get_carsB = ttk.Button(dataFrame, text='Wgraj samochody', style='Accentbutton', command=browser_cars, width=16)
@@ -236,5 +236,14 @@ get_distB = ttk.Button(dataFrame, text='Wgraj dystanse', style='Accentbutton', c
 get_distB.place(x=20, y=150)
 get_all = ttk.Button(dataFrame, text='Wgraj automatycznie', style='Accentbutton', command=browser_all)
 get_all.place(x=20, y=195)
+startAlgoB = ttk.Button(algoFrame, text='Uruchom algorytm', style='Accentbutton', command=get_params)
+startAlgoB.place(x=60, y=45)
+
+
+# Radiobuttons
+radio1 = ttk.Radiobutton(algoFrame, text='Algorytm 1',  value=1)
+radio1.place(x=10, y=5)
+radio2 = ttk.Radiobutton(algoFrame, text='Algorytm 2',  value=2)
+radio2.place(x=130, y=5)
 
 root.mainloop()
