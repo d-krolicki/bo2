@@ -48,7 +48,9 @@ for wholesaler in nasz_sklep.wholesalers:
 # ustalanie cen w hurtowniach
 
 if __name__ == "__main__":
-    algo(nasz_sklep,penaltyVal=5)
+    # algo(nasz_sklep, penaltyVal=5)
+    print(algo2(nasz_sklep))
+
 
     # test = Population(nasz_sklep, 3)
     # test.initial_population()
