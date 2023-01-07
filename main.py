@@ -3,7 +3,7 @@ import random
 from algorithm import *
 from structure import *
 from utils import print_summary
-seed(11)
+# seed(11)
 # stworzenie pustej struktury danych - sklepu
 nasz_sklep = Shop()
 
@@ -47,18 +47,16 @@ for wholesaler in nasz_sklep.wholesalers:
 # ustalanie cen w hurtowniach
 
 if __name__ == "__main__":
-    najlepszy = algo(nasz_sklep, iterationStop=100, populationSize=1000, penaltyVal=10)
-    demand = copy.copy(nasz_sklep.products)
-    for j, car in enumerate(najlepszy.solution):
-            for i, shopping_list in enumerate(car):
-                for tup in shopping_list:
-                    demand[tup[0]] -= tup[1]
-    for key , val in demand.items():
-        print(f'{key.name} : {nasz_sklep.products[key]} {val}')
-    # test = Population(nasz_sklep, 3)
-    # test.initial_population()
-    # for i in range(test.population_size):
-    #     test.population[i].objective_function()
-    # test.sort()
-    # for i in range(test.population_size):
-    #     print(test.population[i].cost)
+    for _ in range(10):
+        najlepszy = algo(nasz_sklep)
+        print(f'alg1 :{najlepszy.cost}', end=' ')
+        najlepszy = algo2(nasz_sklep)
+        print(f'alg2 :{najlepszy.cost}')
+    # demand = copy.copy(nasz_sklep.products)
+    # for j, car in enumerate(najlepszy.solution):
+    #         for i, shopping_list in enumerate(car):
+    #             for tup in shopping_list:
+    #                 demand[tup[0]] -= tup[1]
+    # for key , val in demand.items():
+    #     # print(f'{key.name} : {nasz_sklep.products[key]} {val}')
+

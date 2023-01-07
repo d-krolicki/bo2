@@ -6,14 +6,14 @@ Wydaje mi sie, ze powinno przyjmowac argument po prostu obiekt typu Shop, a zwra
 """
 
 CROSSOVER_PROBABILITY = 0.98
-MUTATION_PROBABILITY_SWAP_AMOUNT = 0.0005
-MUTATION_PROBABILITY_VISIT_ORDER = 0.005
-MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.0005
-MUTATION_PROBABILITY_SUBTRACT_AMOUNT = 0.1
+MUTATION_PROBABILITY_SWAP_AMOUNT = 0.01
+MUTATION_PROBABILITY_VISIT_ORDER = 0.01
+MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.01
+MUTATION_PROBABILITY_SUBTRACT_AMOUNT = 0.01
 COUNTER = 0
 
 
-def algo(shop: Shop, iterationStop: int = 1000, populationSize: int = 300, penaltyVal: int = 2) -> Solution:
+def algo(shop: Shop, iterationStop: int = 50, populationSize: int = 100, penaltyVal: int = 10) -> Solution:
     zmiana_najlepszego_osobnika = []
     toplot = []
     test = Population(shop, populationSize)
@@ -34,7 +34,7 @@ def algo(shop: Shop, iterationStop: int = 1000, populationSize: int = 300, penal
                 newPopulation.append(child1)
                 newPopulation.append(child2)
         test.population = newPopulation
-        print(i)
+        # print(i)
         test.fill_population()
 
         for s in range(populationSize):
@@ -64,8 +64,8 @@ def algo(shop: Shop, iterationStop: int = 1000, populationSize: int = 300, penal
             najlepszy = test.population[0]
         zmiana_najlepszego_osobnika.append(najlepszy.cost)
         
-    plt.plot(zmiana_najlepszego_osobnika)
-    plt.show()
+    # plt.plot(zmiana_najlepszego_osobnika)
+    # plt.show()
 
     return najlepszy
 
@@ -81,7 +81,6 @@ def algo2(shop: Shop, iterationStop: int = 50, changesInPopulationValue: int = 8
     test.initial_population()  # tworzenie pierwszej poplacji losowej
 
     toplot = []
-
     while iterationStop > 0:  # liczba iteracji STOP
         changesInPopulation = changesInPopulationValue
         while changesInPopulation > 0:  # liczba podjętych prób zmian w populacji
@@ -91,11 +90,12 @@ def algo2(shop: Shop, iterationStop: int = 50, changesInPopulationValue: int = 8
             mutation1P = random()
             mutation2P = random()
             mutation3P = random()
+            mutation4P = random()
             crossoverP = random()
 
             if mutation1P < MUTATION_PROBABILITY_SWAP_AMOUNT:  # czy mutacja ma się wykonać?
                 s = fractional_probability(test)  # wybieranie osobnika do mutacji
-                tempSample = copy.deepcopy(test.population[s])  # skopiowanie osobnika
+                tempSample = test.population[s]  # skopiowanie osobnika
                 tempSample.mutation(True, False, False)  # wykonanie mutacji osobnika
                 tempSample.objective_function(penaltyVal)  # obliczenie jego funkcji celu
                 if tempSample.cost < test.population[-1].cost:  # dodanie do populacji jeśli jest lepszy od najgorszego
@@ -104,7 +104,7 @@ def algo2(shop: Shop, iterationStop: int = 50, changesInPopulationValue: int = 8
 
             if mutation2P < MUTATION_PROBABILITY_VISIT_ORDER:
                 s = fractional_probability(test)
-                tempSample = copy.deepcopy(test.population[s])
+                tempSample = test.population[s]
                 tempSample.mutation(False, True, False)
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
@@ -113,27 +113,34 @@ def algo2(shop: Shop, iterationStop: int = 50, changesInPopulationValue: int = 8
 
             if mutation3P < MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT:
                 s = fractional_probability(test)
-                tempSample = copy.deepcopy(test.population[s])
+                tempSample = test.population[s]
                 tempSample.mutation(False, False, True)
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
                 test.sort()
 
-            # if crossoverP < CROSSOVER_PROBABILITY:
-            #     s1 = fractional_probability(test)
-            #     s2 = fractional_probability(test)
-            #     child1, child2 = test.crossover(test.population[s1], test.population[s2])
-            #     print(child1)
-            #     print(child2)
-            #     child1.objective_function(penaltyVal)
-            #     child2.objective_function(penaltyVal)
-            #
-            #     test.population.append(child2)
-            #     test.population_size += 2
-            #     calculate_cost_fun(test, penaltyVal)
-            #     test.population_size -= 2
-            #     test.population = test.population[:-2]
+            if mutation4P < MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT:
+                s = fractional_probability(test)
+                tempSample = test.population[s]
+                tempSample.mutation(False, False, False, True)
+                tempSample.objective_function(penaltyVal)
+                if tempSample.cost < test.population[-1].cost:
+                    test.population[-1] = tempSample
+                test.sort()    
+
+            if crossoverP < CROSSOVER_PROBABILITY:
+                s1 = fractional_probability(test)
+                s2 = fractional_probability(test)
+                child1, child2 = test.crossover(test.population[s1], test.population[s2])
+                child1.objective_function(penaltyVal)
+                child2.objective_function(penaltyVal)
+                test.population.append(child1)
+                test.population.append(child2)
+                test.population_size = len(test.population)
+                calculate_cost_fun(test, penaltyVal)
+                test.population = test.population[:-2]
+                test.population_size = len(test.population)
 
             calculate_cost_fun(test, penaltyVal)
             changesInPopulation -= 1
@@ -141,10 +148,10 @@ def algo2(shop: Shop, iterationStop: int = 50, changesInPopulationValue: int = 8
         toplot.append(test.population[0].cost)
         iterationStop -= 1
 
-    plt.plot(toplot)
-    plt.show()
+    # plt.plot(toplot)
+    # plt.show()
 
-    return test.population[0].cost
+    return test.population[0]
 
 
 def fractional_probability(population: Population):  # wybieranie osobników do mutacji/krzyżówki

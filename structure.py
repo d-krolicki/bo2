@@ -78,7 +78,6 @@ class Wholesaler:
         :param amount: Amount of added objects.
         :return: None
         """
-        print(round(uniform(-100, 100), 2))
         self.products[product] = [product.id, product.price + round(uniform(-product.price, product.price), 2), amount]
 
 
@@ -198,7 +197,7 @@ class Sample:
             sol += '====================================\n'
         return sol
 
-    def mutation(self, random_change_value: bool, random_swap: bool, add_or_sub_stop: bool, sub_from_val:bool) -> List[List[List[Tuple]]]:
+    def mutation(self, random_change_value: bool = False, random_swap: bool = False, add_or_sub_stop: bool = False, sub_from_val: bool = False) -> List[List[List[Tuple]]]:
         """
         Method handling mutations of sample solutions in the genetic algorithm.
 
@@ -270,6 +269,7 @@ class Sample:
         # TODO sprawdzanie czy produkty są w hurtowni
         demand = copy.copy(self.shop.products)
         self.cost = 0.0
+        
         # print("========================================================================")
         # print("Starting delivery.")
         for j, car in enumerate(self.solution):

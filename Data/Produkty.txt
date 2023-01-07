@@ -1,4 +1,4 @@
-Parówki 100
+Parówki 20
 Papier_Toaletowy 100
 Herbata 100
 Czekolada 100
