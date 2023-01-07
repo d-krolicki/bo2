@@ -1,5 +1,7 @@
 # Badania operacyjne 2
 ## Hurtownia
+## Dokumentacja
+https://docs.google.com/document/d/1nTYyFvVB-BnhqwKx-9pCZMtF9Uv5BPESLCRWCIge8cI/edit
 
 ### TO-DO:
 1. Crossover
