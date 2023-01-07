@@ -78,7 +78,8 @@ class Wholesaler:
         :param amount: Amount of added objects.
         :return: None
         """
-        self.products[product] = [product.id, product.price + round(uniform(-0.5, 0.5), 2), amount]
+        print(round(uniform(-100, 100), 2))
+        self.products[product] = [product.id, product.price + round(uniform(-product.price, product.price), 2), amount]
 
 
 class Shop:
@@ -197,7 +198,7 @@ class Sample:
             sol += '====================================\n'
         return sol
 
-    def mutation(self, random_change_value: bool, random_swap: bool, add_or_sub_stop: bool) -> List[List[List[Tuple]]]:
+    def mutation(self, random_change_value: bool, random_swap: bool, add_or_sub_stop: bool, sub_from_val:bool) -> List[List[List[Tuple]]]:
         """
         Method handling mutations of sample solutions in the genetic algorithm.
 
@@ -240,6 +241,14 @@ class Sample:
                     stop_place = randint(0, len(self.solution[car]) - 1)
                     del self.solution[car][stop_place]
                     del self.paths[car][stop_place]
+        elif sub_from_val:
+            car = randint(0, len(self.solution) - 1)
+            stop_place = randint(0, len(self.solution[car]) - 1)
+            product = randint(0, len(self.solution[car][stop_place]) - 1)
+            val = randint(0, abs(self.shop.products[self.solution[car][stop_place][product][0]] - self.solution[car][stop_place][product][1]))
+            if self.shop.products[self.solution[car][stop_place][product][0]] - self.solution[car][stop_place][product][1] < 0:
+                val = val * (-1)
+            self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0], self.solution[car][stop_place][product][1] + val
         return self.solution
 
     def objective_function(self, penalty_val: int = 10) -> float:
@@ -418,3 +427,17 @@ class Population:
         lst_sorted = sorted(lst, key=lambda sample: sample.cost)
         self.population = lst_sorted
         # print(self.population[0])
+
+    def roulette_selection(self):
+        # Oblicz sumę wszystkich wartości funkcji przystosowania
+        total_fitness = sum(sample.cost for sample in self.population)
+
+        # Losuj liczbę z zakresu od 0 do sumy funkcji przystosowania
+        pick = uniform(0, total_fitness)
+
+        # Przeszukaj populację i zwróć osobnika, którego próg zostanie przekroczony
+        current = 0
+        for sample in self.population:
+            current += sample.cost
+            if current > pick:
+                return sample
