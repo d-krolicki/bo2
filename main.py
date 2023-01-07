@@ -8,7 +8,7 @@ seed(11)
 nasz_sklep = Shop()
 
 # dodawanie produktów do sklepu
-with open('Produkty.txt', 'r', encoding='utf8') as f:
+with open('Data/Produkty.txt', 'r', encoding='utf8') as f:
     prodMat = []
     for lines in f.readlines():
         lines = lines.split()
@@ -17,7 +17,7 @@ with open('Produkty.txt', 'r', encoding='utf8') as f:
             nasz_sklep.add_product_for_shop(Product(name=lines[0], price=int(lines[1]), id_p=nasz_sklep.max_id_prod), int(lines[1]))
 
 # dodawanie macierzy odległości
-with open('distances.txt', 'r', encoding='utf8') as f:
+with open('Data/distances.txt', 'r', encoding='utf8') as f:
     distMat = []  # distances matrix
     for line in f.readlines():
         line = line.split()
@@ -25,7 +25,7 @@ with open('distances.txt', 'r', encoding='utf8') as f:
             distMat.append([int(i) for i in line])
 
 # dodawanie samochodów
-with open('cars.txt', 'r', encoding='utf8') as f:
+with open('Data/cars.txt', 'r', encoding='utf8') as f:
     carMat = []
     for line in f.readlines():
         line = line.split()
@@ -35,7 +35,7 @@ with open('cars.txt', 'r', encoding='utf8') as f:
         nasz_sklep.add_car(Car(c[0], c[1]))
 
 # dodawanie hurtowni
-with open('Hurtownie.txt', 'r', encoding='utf8') as f:
+with open('Data/Hurtownie.txt', 'r', encoding='utf8') as f:
     for count, lines in enumerate(f.readlines()):
         nasz_sklep.add_wholesaler(Wholesaler(lines[:-1], nasz_sklep.max_id_hurt, distMat[count]))
 
