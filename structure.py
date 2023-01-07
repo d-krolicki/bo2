@@ -283,7 +283,7 @@ class Sample:
                     self.cost += self.paths[j][i].distances[self.paths[j][i + 1].id]
                 except:
                     # print(
-                        # f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
+                    # f"Car {j + 1} driving from wholesaler {self.paths[j][i].id} to shop, cost is {self.paths[j][i].distances[-1]}.")
                     self.cost += self.paths[j][i].distances[-1]
                 returns = sum_weight_of_prod // car_capacity
                 if returns > 0:
