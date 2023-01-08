@@ -1,249 +1,413 @@
-# import tkinter as tk
-# import tkinter.ttk as ttk
-# from tkinter import filedialog
-# import tkinter.scrolledtext as st
-# from tkinter import *
-#
-#
-# def gui() -> None:
-#     # Set window
-#     root = tk.Tk()
-#     root.title('Sklep')
-#     # root.resizable(width=False, height=False)  # rozmiar okna jest stały
-#
-#     window_height = 500
-#     window_width = 1200
-#     root.geometry("{}x{}".format(window_width, window_height))
-#
-#     def center_screen():
-#         """ gets the coordinates of the center of the screen """
-#         global screen_height, screen_width, x_cordinate, y_cordinate
-#
-#         screen_width = root.winfo_screenwidth()
-#         screen_height = root.winfo_screenheight()
-#         x_cordinate = int((screen_width / 2) - (window_width / 2))
-#         y_cordinate = int((screen_height / 2) - (window_height / 2))
-#         root.geometry("{}x{}+{}+{}".format(window_width, window_height, x_cordinate, y_cordinate))
-#
-#     center_screen()
-#
-#     # Icon
-#     root.iconbitmap('diagram_v2_29.ico')
-#
-#     # Set Azure style
-#     style = ttk.Style(root)
-#     root.tk.call('source', 'azure/azure.tcl')
-#     style.theme_use('azure')
-#     style.configure("Accentbutton", foreground='white')
-#
-#     # Variables
-#     global params
-#     global hurtownie
-#     global cars
-#     global products
-#     global distances
-#     hurtownie = 0
-#     cars = 0
-#     products = 0
-#     distances = 0
-#     m1P = tk.IntVar()
-#     m2P = tk.IntVar()
-#     m3P = tk.IntVar()
-#     kP = tk.IntVar()
-#     popSize = tk.IntVar()
-#     iterations = tk.IntVar()
-#     wData = tk.IntVar()
-#     cData = tk.IntVar()
-#     pData = tk.IntVar()
-#
-#     def get_params() -> None:
-#         # Będzie można to pominąć i mieć cały czas dostęp do tych paramterów pod postacią x.get()
-#         # Ale chyba lepiej zostać przy zmiennych globalnych
-#         global params
-#
-#         m1 = inM1.get()
-#         m2 = inM2.get()
-#         m3 = inM3.get()
-#         k = inK.get()
-#         pop = inPop.get()
-#         it = inIt.get()
-#         params = [m1, m2, m3, k, pop, it]
-#
-#     # Frames
-#     paramsFrame = ttk.LabelFrame(root, text='Parametry', width=250, height=360)
-#     paramsFrame.place(x=400, y=12)
-#     propFrame = ttk.LabelFrame(paramsFrame, text='Prawdopodobieństwo', width=200, height=215)
-#     propFrame.place(x=20, y=15)
-#     dataFrame = ttk.LabelFrame(root, text='Dane', width=355, height=480)
-#     dataFrame.place(x=20, y=12)
-#     algoFrame = ttk.LabelFrame(root, text='Algorytm', width=250, height=100)
-#     algoFrame.place(x=400, y=390)
-#
-#     # Labels
-#     ttk.Label(propFrame, text="Mutacji 1").place(x=20, y=15)
-#     ttk.Label(propFrame, text="Mutacji 2").place(x=20, y=62)
-#     ttk.Label(propFrame, text="Mutacji 3").place(x=20, y=109)
-#     ttk.Label(propFrame, text="Krzyżowania").place(x=20, y=156)
-#     ttk.Label(paramsFrame, text="Liczebność\npopulacji").place(x=40, y=245)
-#     ttk.Label(paramsFrame, text="Liczba iteracji").place(x=40, y=303)
-#     pathW = tk.Label(dataFrame, text="Filepath:")
-#     pathW.place(x=160, y=20)
-#     pathC = tk.Label(dataFrame, text="Filepath:")
-#     pathC.place(x=160, y=65)
-#     pathP = tk.Label(dataFrame, text="Filepath:")
-#     pathP.place(x=160, y=110)
-#     pathD = tk.Label(dataFrame, text="Filepath:")
-#     pathD.place(x=160, y=155)
-#
-#     # Inputs
-#     inM1 = ttk.Entry(propFrame, width=8)
-#     inM1.place(x=110, y=8)
-#     inM2 = ttk.Entry(propFrame, width=8)
-#     inM2.place(x=110, y=55)
-#     inM3 = ttk.Entry(propFrame, width=8)
-#     inM3.place(x=110, y=102)
-#     inK = ttk.Entry(propFrame, width=8)
-#     inK.place(x=110, y=149)
-#     inPop = ttk.Entry(paramsFrame, width=8)
-#     inPop.place(x=130, y=245)
-#     inIt = ttk.Entry(paramsFrame, width=8)
-#     inIt.place(x=130, y=295)
-#
-#     # Notebook
-#     notebook = ttk.Notebook(dataFrame)
-#     notebook.place(x=20, y=250)
-#
-#     # karty w notatniku
-#     tabW = ttk.Frame(notebook, width=150, height=150)
-#     notebook.add(tabW, text='Hurtownie')
-#     tabC = ttk.Frame(notebook, width=150, height=150)
-#     notebook.add(tabC, text='Samochody')
-#     tabP = ttk.Frame(notebook, width=150, height=150)
-#     notebook.add(tabP, text='Produkty')
-#     tabD = ttk.Frame(notebook, width=150, height=150)
-#     notebook.add(tabD, text='Dystanse')
-#
-#     # scrolled texts
-#     scrtextW = st.ScrolledText(tabW, width=45, height=10, state='disabled')
-#     scrtextW.pack()
-#     scrtextC = st.ScrolledText(tabC, width=45, height=10, state='disabled')
-#     scrtextC.pack()
-#     scrtextP = st.ScrolledText(tabP, width=45, height=10, state='disabled')
-#     scrtextP.pack()
-#     scrtextD = st.ScrolledText(tabD, width=45, height=10, state='disabled')
-#     scrtextD.pack()
-#
-#     # Reading .txt files
-#     def browser_wholsel():
-#         global hurtownie
-#         hurtownie = filedialog.askopenfilename(initialdir="/", title="Select a File",
-#                                                filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
-#         if hurtownie:
-#             with open(hurtownie, mode="r", encoding="utf-8") as input_file:
-#                 scrtextW.configure(state='normal')
-#                 scrtextW.delete(1.0, END)
-#                 for line in input_file.readlines():
-#                     scrtextW.insert(tk.INSERT, line)
-#                 scrtextW.configure(state='disabled')
-#         pathW.configure(text='Filepath:' + hurtownie)
-#
-#     def browser_cars():
-#         global cars
-#         cars = filedialog.askopenfilename(initialdir="/", title="Select a File",
-#                                           filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
-#         if cars:
-#             with open(cars, mode="r", encoding="utf-8") as input_file:
-#                 scrtextC.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextC.insert(tk.INSERT, line)
-#                 scrtextC.configure(state='disabled')
-#         pathC.configure(text='Filepath:' + cars)
-#
-#     def browser_products():
-#         global products
-#         products = filedialog.askopenfilename(initialdir="/", title="Select a File",
-#                                               filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
-#         if products:
-#             with open(products, mode="r", encoding="utf-8") as input_file:
-#                 scrtextP.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextP.insert(tk.INSERT, line)
-#                 scrtextP.configure(state='disabled')
-#         pathP.configure(text='Filepath:' + products)
-#
-#     def browser_distances():
-#         global distances
-#         distances = filedialog.askopenfilename(initialdir="/", title="Select a File",
-#                                                filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
-#         if distances:
-#             with open(distances, mode="r", encoding="utf-8") as input_file:
-#                 scrtextD.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextD.insert(tk.INSERT, line)
-#                 scrtextD.configure(state='disabled')
-#         pathD.configure(text='Filepath:' + distances)
-#
-#     def browser_all():
-#         global hurtownie, cars, products, distances
-#         if not hurtownie:
-#             with open('Data/Hurtownie.txt', mode="r", encoding="utf-8") as input_file:
-#                 scrtextW.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextW.insert(tk.INSERT, line)
-#                 scrtextW.configure(state='disabled')
-#         pathW.configure(text='Filepath: ' + 'Data/hurtownie.txt')
-#
-#         if not cars:
-#             with open('Data/cars.txt', mode="r", encoding="utf-8") as input_file:
-#                 scrtextC.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextC.insert(tk.INSERT, line)
-#                 scrtextC.configure(state='disabled')
-#         pathC.configure(text='Filepath: ' + 'Data/cars.txt')
-#
-#         if not products:
-#             with open('Data/Produkty.txt', mode="r", encoding="utf-8") as input_file:
-#                 scrtextP.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextP.insert(tk.INSERT, line)
-#                 scrtextP.configure(state='disabled')
-#         pathP.configure(text='Filepath: ' + 'Data/produkty.txt')
-#
-#         if not distances:
-#             with open('Data/distances.txt', mode="r", encoding="utf-8") as input_file:
-#                 scrtextD.configure(state='normal')
-#                 for line in input_file.readlines():
-#                     scrtextD.insert(tk.INSERT, line)
-#                 scrtextD.configure(state='disabled')
-#         pathD.configure(text='Filepath: ' + 'Data/distances.txt')
-#
-#     # Buttons
-#     get_wholB = ttk.Button(dataFrame, text='Wgraj hurtownie', style='Accentbutton', command=browser_wholsel, width=16)
-#     get_wholB.place(x=20, y=15)
-#     get_carsB = ttk.Button(dataFrame, text='Wgraj samochody', style='Accentbutton', command=browser_cars, width=16)
-#     get_carsB.place(x=20, y=60)
-#     get_prodB = ttk.Button(dataFrame, text='Wgraj produkty', style='Accentbutton', command=browser_products, width=16)
-#     get_prodB.place(x=20, y=105)
-#     get_distB = ttk.Button(dataFrame, text='Wgraj dystanse', style='Accentbutton', command=browser_distances, width=16)
-#     get_distB.place(x=20, y=150)
-#     get_all = ttk.Button(dataFrame, text='Wgraj automatycznie', style='Accentbutton', command=browser_all)
-#     get_all.place(x=20, y=195)
-#     startAlgoB = ttk.Button(algoFrame, text='Uruchom algorytm', style='Accentbutton', command=get_params)
-#     startAlgoB.place(x=60, y=45)
-#
-#     # Radiobuttons
-#     radio1 = ttk.Radiobutton(algoFrame, text='Algorytm 1', value=1)
-#     radio1.place(x=10, y=5)
-#     radio2 = ttk.Radiobutton(algoFrame, text='Algorytm 2', value=2)
-#     radio2.place(x=130, y=5)
-#
-#     root.mainloop()
-
-
-import matplotlib
-matplotlib.use("TkAgg")
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
-from matplotlib.figure import Figure
-
 import tkinter as tk
-from tkinter import ttk
+import tkinter.ttk as ttk
+from tkinter import filedialog
+import tkinter.scrolledtext as st
+from tkinter import *
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+from matplotlib.figure import Figure
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
+
+# matplotlib.use("TkAgg")
+
+from algorithm import *
+
+
+class GUI:
+    def __init__(self, root):
+        # =============================GENERAL SETTINGS=========================================
+        self.shop = Shop()
+        self.root = root
+        root.title('Sklep')
+
+        self.window_height = 550
+        self.window_width = 1200
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x_cordinate = int((screen_width / 2) - (self.window_width / 2))
+        y_cordinate = int((screen_height / 2) - (self.window_height / 2))
+        self.root.geometry("{}x{}".format(self.window_width, self.window_height, x_cordinate, y_cordinate))
+
+        # Icon
+        self.root.iconbitmap('diagram_v2_29.ico')
+
+        # Set Azure style
+        style = ttk.Style(root)
+        self.root.tk.call('source', 'azure/azure.tcl')
+        style.theme_use('azure')
+        style.configure("Accentbutton", foreground='white')
+
+        # ===============================VARIABLES===================================
+        self.paramsData = None
+        self.wholsalersFilePath = None
+        self.carsFilePath = None
+        self.productsFilePath = None
+        self.distancesFilePath = None
+
+        self.wholsalersData = []
+        self.carsData = []
+        self.productsData = []
+        self.distancesData = []
+
+        self.radioButtonVar = tk.IntVar()
+
+        self.toPlot = None
+
+        self.solution = None
+
+        # ===============================WINDOW======================================
+        # Frames
+        self.paramsFrame = ttk.LabelFrame(self.root, text='Parametry', width=250, height=410)
+        self.paramsFrame.place(x=400, y=12)
+        self.propFrame = ttk.LabelFrame(self.paramsFrame, text='Prawdopodobieństwo', width=200, height=265)
+        self.propFrame.place(x=20, y=15)
+        self.dataFrame = ttk.LabelFrame(self.root, text='Dane', width=355, height=530)
+        self.dataFrame.place(x=20, y=12)
+        self.algoFrame = ttk.LabelFrame(self.root, text='Algorytm', width=250, height=102)
+        self.algoFrame.place(x=400, y=440)
+
+        # Labels
+        ttk.Label(self.propFrame, text="Mutacji 1").place(x=20, y=15)
+        ttk.Label(self.propFrame, text="Mutacji 2").place(x=20, y=62)
+        ttk.Label(self.propFrame, text="Mutacji 3").place(x=20, y=109)
+        ttk.Label(self.propFrame, text="Mutacji 4").place(x=20, y=156)
+        ttk.Label(self.propFrame, text="Krzyżowania").place(x=20, y=203)
+        ttk.Label(self.paramsFrame, text="Liczebność\npopulacji").place(x=40, y=295)
+        ttk.Label(self.paramsFrame, text="Liczba iteracji").place(x=40, y=353)
+
+        self.pathW = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathW.place(x=160, y=13)
+        self.pathC = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathC.place(x=160, y=73)
+        self.pathP = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathP.place(x=160, y=133)
+        self.pathD = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathD.place(x=160, y=193)
+
+        self.errorLabel = tk.Label(root, text=' ', justify=LEFT)
+        self.errorLabel.place(x=1030, y=400)
+
+        # Inputs
+        self.inM1 = ttk.Entry(self.propFrame, width=8)
+        self.inM1.insert(0, '0.1')
+        self.inM1.place(x=110, y=8)
+        self.inM2 = ttk.Entry(self.propFrame, width=8)
+        self.inM2.insert(0, '0.1')
+        self.inM2.place(x=110, y=55)
+        self.inM3 = ttk.Entry(self.propFrame, width=8)
+        self.inM3.insert(0, '0.1')
+        self.inM3.place(x=110, y=102)
+        self.inM4 = ttk.Entry(self.propFrame, width=8)
+        self.inM4.insert(0, '0.1')
+        self.inM4.place(x=110, y=149)
+        self.inK = ttk.Entry(self.propFrame, width=8)
+        self.inK.insert(0, '0.1')
+        self.inK.place(x=110, y=196)
+        self.inPop = ttk.Entry(self.paramsFrame, width=8)
+        self.inPop.insert(0, '10')
+        self.inPop.place(x=130, y=295)
+        self.inIt = ttk.Entry(self.paramsFrame, width=8)
+        self.inIt.insert(0, '10')
+        self.inIt.place(x=130, y=346)
+
+        # Notebook
+        self.notebook = ttk.Notebook(self.dataFrame, width=150, height=180)
+        self.notebook.place(x=20, y=290)
+
+        # karty w notatniku
+        self.tabW = ttk.Frame(self.notebook, width=150, height=150)
+        self.notebook.add(self.tabW, text='Hurtownie')
+        self.tabC = ttk.Frame(self.notebook, width=150, height=150)
+        self.notebook.add(self.tabC, text='Samochody')
+        self.tabP = ttk.Frame(self.notebook, width=150, height=150)
+        self.notebook.add(self.tabP, text='Produkty')
+        self.tabD = ttk.Frame(self.notebook, width=150, height=150)
+        self.notebook.add(self.tabD, text='Dystanse')
+
+        # scrolled texts
+        self.scrtextW = st.ScrolledText(self.tabW, width=45, height=12, state='disabled')
+        self.scrtextW.pack()
+        self.scrtextC = st.ScrolledText(self.tabC, width=45, height=12, state='disabled')
+        self.scrtextC.pack()
+        self.scrtextP = st.ScrolledText(self.tabP, width=45, height=12, state='disabled')
+        self.scrtextP.pack()
+        self.scrtextD = st.ScrolledText(self.tabD, width=45, height=12, state='disabled')
+        self.scrtextD.pack()
+        self.scrtextSolution = st.ScrolledText(self.root, width=55, height=14.5, state='disabled')
+        self.scrtextSolution.place(x=670, y=313)
+
+        # Buttons
+        self.get_wholB = ttk.Button(self.dataFrame, text='Wgraj hurtownie', style='Accentbutton',
+                                    command=lambda: self.browser_wholsel(),
+                                    width=16)
+        self.get_wholB.place(x=20, y=15)
+        self.get_carsB = ttk.Button(self.dataFrame, text='Wgraj samochody', style='Accentbutton',
+                                    command=lambda: self.browser_cars(), width=16)
+        self.get_carsB.place(x=20, y=75)
+        self.get_prodB = ttk.Button(self.dataFrame, text='Wgraj produkty', style='Accentbutton',
+                                    command=lambda: self.browser_products(),
+                                    width=16)
+        self.get_prodB.place(x=20, y=135)
+        self.get_distB = ttk.Button(self.dataFrame, text='Wgraj dystanse', style='Accentbutton',
+                                    command=lambda: self.browser_distances(),
+                                    width=16)
+        self.get_distB.place(x=20, y=195)
+        self.get_all = ttk.Button(self.dataFrame, text='Wgraj automatycznie', style='Accentbutton',
+                                  command=lambda: self.browser_all())
+        self.get_all.place(x=20, y=250)
+        self.startAlgoB = ttk.Button(self.algoFrame, text='Uruchom algorytm', style='Accentbutton',
+                                     command=lambda: self.start())
+        self.startAlgoB.place(x=60, y=45)
+
+        # Radiobuttons
+        self.radio1 = ttk.Radiobutton(self.algoFrame, text='Algorytm 1', variable=self.radioButtonVar, value=1)
+        self.radio1.place(x=10, y=5)
+        self.radio2 = ttk.Radiobutton(self.algoFrame, text='Algorytm 2', variable=self.radioButtonVar, value=2)
+        self.radio2.place(x=130, y=5)
+
+    # ===============================METHODS======================================
+    # Reading .txt files
+    def browser_distances(self):
+        self.distancesData = []
+        self.distancesFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
+                                                            filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
+        if self.distancesFilePath:
+            with open(self.distancesFilePath, mode="r", encoding="utf-8") as input_file:
+                self.scrtextD.configure(state='normal')
+                self.scrtextD.delete(1.0, END)
+                for lines in input_file.readlines():
+                    self.scrtextD.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    if lines:
+                        self.distancesData.append([int(i) for i in lines])
+                self.scrtextD.configure(state='disabled')
+        self.pathD.configure(text='Filepath:\n' + self.distancesFilePath)
+
+    def browser_wholsel(self):
+        self.wholsalersData = []
+        if self.distancesData == [] or self.distancesData is None:
+            self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
+            pass
+        if self.distancesData:
+            self.errorLabel.configure(text='')
+
+        self.wholsalersFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
+                                                             filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
+        if self.wholsalersFilePath:
+            with open(self.wholsalersFilePath, mode="r", encoding="utf-8") as input_file:
+                self.scrtextW.configure(state='normal')
+                self.scrtextW.delete(1.0, END)
+                for count, lines in enumerate(input_file.readlines()):
+                    self.scrtextW.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    self.wholsalersData.append(lines)
+                    # self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
+                self.scrtextW.configure(state='disabled')
+        self.pathW.configure(text='Filepath:\n' + self.wholsalersFilePath)
+
+    def browser_cars(self):
+        self.carsData = []
+        self.carsFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
+                                                       filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
+        if self.carsFilePath:
+            with open(self.carsFilePath, mode="r", encoding="utf-8") as input_file:
+                self.scrtextC.configure(state='normal')
+                self.scrtextC.delete(1.0, END)
+                for lines in input_file.readlines():
+                    self.scrtextC.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    if lines:
+                        self.carsData.append([val if count == 0 else int(val) for count, val in enumerate(lines)])
+                # for c in self.carsData:
+                #     self.shop.add_car(Car(c[0], c[1]))
+                self.scrtextC.configure(state='disabled')
+        self.pathC.configure(text='Filepath:\n' + self.carsFilePath)
+
+    def browser_products(self):
+        self.productsData = []
+        self.productsFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
+                                                           filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
+        if self.productsFilePath:
+            with open(self.productsFilePath, mode="r", encoding="utf-8") as input_file:
+                self.scrtextP.configure(state='normal')
+                self.scrtextP.delete(1.0, END)
+                for lines in input_file.readlines():
+                    self.scrtextP.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    if lines:
+                        self.productsData.append(
+                            [val.replace("_", " ") if count == 0 else int(val) for count, val in enumerate(lines)])
+                # for p in self.productsData:
+                #     self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod),
+                #                                    randint(1, 100))
+                self.scrtextP.configure(state='disabled')
+        self.pathP.configure(text='Filepath:\n' + self.productsFilePath)
+
+    def browser_all(self):
+        self.wholsalersData = []
+        self.carsData = []
+        self.productsData = []
+        self.distancesData = []
+
+        if not self.distancesFilePath:
+            with open('Data/distances.txt', mode="r", encoding="utf-8") as input_file:
+                self.scrtextD.configure(state='normal')
+                self.scrtextD.delete(1.0, END)
+                for line in input_file.readlines():
+                    self.scrtextD.insert(tk.INSERT, line)
+                    line = line.split()
+                    if line:
+                        self.distancesData.append([int(i) for i in line])
+                self.scrtextD.configure(state='disabled')
+        self.pathD.configure(text='Filepath:\n' + 'Data/distances.txt')
+
+        if not self.wholsalersFilePath:
+            if self.distancesData == [] or self.distancesData is None:
+                self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
+                pass
+            if self.distancesData:
+                self.errorLabel.configure(text='')
+
+            with open('Data/Hurtownie.txt', mode="r", encoding="utf-8") as input_file:
+                self.scrtextW.configure(state='normal')
+                self.scrtextW.delete(1.0, END)
+                for count, lines in enumerate(input_file.readlines()):
+                    self.scrtextW.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    self.wholsalersData.append(lines)
+                    if self.distancesData == [] or self.distancesData is None:
+                        self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
+                        pass
+                    # self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
+                self.scrtextW.configure(state='disabled')
+        self.pathW.configure(text='Filepath:\n' + 'Data/Hurtownie.txt')
+
+        if not self.carsFilePath:
+            with open('Data/cars.txt', mode="r", encoding="utf-8") as input_file:
+                self.scrtextC.configure(state='normal')
+                self.scrtextC.delete(1.0, END)
+                for lines in input_file.readlines():
+                    self.scrtextC.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    if lines:
+                        self.carsData.append([val if count == 0 else int(val) for count, val in enumerate(lines)])
+                # for c in self.carsData:
+                #     self.shop.add_car(Car(c[0], c[1]))
+                self.scrtextC.configure(state='disabled')
+
+        self.pathC.configure(text='Filepath:\n' + 'Data/cars.txt')
+
+        if not self.productsFilePath:
+            with open('Data/Produkty.txt', mode="r", encoding="utf-8") as input_file:
+                self.scrtextP.configure(state='normal')
+                self.scrtextP.delete(1.0, END)
+                for lines in input_file.readlines():
+                    self.scrtextP.insert(tk.INSERT, lines)
+                    lines = lines.split()
+                    if lines:
+                        self.productsData.append(
+                            [val.replace("_", " ") if count == 0 else int(val) for count, val in enumerate(lines)])
+                # for p in self.productsData:
+                #     self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod),
+                #                                    randint(1, 100))
+                self.scrtextP.configure(state='disabled')
+        self.pathP.configure(text='Filepath:\n' + 'Data/produkty.txt')
+
+    def cleanData(self):
+        self.shop = Shop()
+
+        for p in self.productsData:
+            self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod), randint(1, 100))
+
+        for c in self.carsData:
+            self.shop.add_car(Car(c[0], c[1]))
+
+        for count, lines in enumerate(self.wholsalersData):
+            if self.distancesData == [] or self.distancesData is None:
+                self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
+                pass
+            self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
+
+    def start(self):
+        self.cleanData()
+        popVal = self.inPop.get()
+        itVal = self.inIt.get()
+        propM1 = self.inM1.get()
+        propM2 = self.inM2.get()
+        propM3 = self.inM3.get()
+        propM4 = self.inM4.get()
+        propC = self.inK.get()
+        self.errorLabel.configure(text='')
+        toplot = None
+
+        conditions = 0
+
+        if popVal == '' or itVal == '' or propM1 == '' or propM2 == '' or propM3 == '' or propM4 == '' or propC == '':  # zmienna nie jest wpisana
+            self.errorLabel.configure(text='Error:\nuzupełnij parametry')
+            conditions += 1
+
+        if not (popVal.isnumeric() and itVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace(
+                '.', '', 1).isdigit() and propM3.replace('.', '', 1).isdigit() and propM4.replace('.', '', 1).isdigit()
+                and propC.replace('.', '', 1).isdigit()):  # zmienna nie jest liczbą
+            self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
+            conditions += 1
+        else:
+            popVal = int(popVal)
+            itVal = int(itVal)
+            propM1 = float(propM1)
+            propM2 = float(propM2)
+            propM3 = float(propM3)
+            propM4 = float(propM4)
+            propC = float(propC)
+
+            if propM1 < 0 or propM1 > 1 or propM2 < 0 or propM2 > 1 or propM3 < 0 or propM3 > 1 or propM4 < 0 \
+                    or propM4 > 1 or propC < 0 or propC > 1 or popVal < 0 or itVal < 0:
+                self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
+                conditions += 1
+
+        if self.wholsalersData == [] or self.carsData == [] or self.productsData == [] or self.distancesData == []:  # nie ma wgranych danych
+            self.errorLabel.configure(text='Error:\nniekompletne pliki z danymi')
+            conditions += 1
+
+        if conditions == 0:
+            if self.radioButtonVar.get() == 1:  # algorytm 1
+                for w in self.shop.wholesalers:
+                    for p in self.shop.products:
+                        w.add_product_for_wholesaler(p, randint(0, 100))
+                solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3, propM4)
+
+                if toplot and solution:
+                    solution2print = solution.__str__()
+                    self.scrtextSolution.configure(state='normal')
+                    self.scrtextSolution.delete(1.0, END)
+                    self.scrtextSolution.insert(tk.INSERT, solution2print)
+                    self.scrtextSolution.configure(state='disabled')
+
+                    fig = Figure(figsize=(5.5, 3), dpi=100)
+                    canvas = FigureCanvasTkAgg(fig, master=self.root)  # A tk.DrawingArea.
+                    canvas.draw()
+                    canvas.get_tk_widget().place(x=670, y=-10)
+                    fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
+
+            elif self.radioButtonVar.get() == 2:  # algorytm 2
+                for w in self.shop.wholesalers:
+                    for p in self.shop.products:
+                        w.add_product_for_wholesaler(p, randint(0, 100))
+                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC)
+
+                if toplot and solution:
+                    solution2print = solution.__str__()
+                    self.scrtextSolution.configure(state='normal')
+                    self.scrtextSolution.delete(1.0, END)
+                    self.scrtextSolution.insert(tk.INSERT, solution2print)
+                    self.scrtextSolution.configure(state='disabled')
+
+                    fig = Figure(figsize=(5.5, 3), dpi=100)
+                    canvas = FigureCanvasTkAgg(fig, master=self.root)  # A tk.DrawingArea.
+                    canvas.draw()
+                    canvas.get_tk_widget().place(x=670, y=-10)
+                    fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
+
+            else:
+                self.errorLabel.configure(text='Error:\nnie wybrano algorytmu')

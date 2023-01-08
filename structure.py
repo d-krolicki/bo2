@@ -4,7 +4,7 @@ from typing import List, Tuple
 import copy
 
 
-seed(10)
+# seed(10)
 
 
 class Car:
