@@ -231,7 +231,6 @@ class Sample:
         elif sub_from_val:
             car = randint(0, len(self.solution) - 1)
             stop_place = randint(0, len(self.solution[car]) - 1)
-            print(len(self.solution[car][stop_place]) - 1)
             product = randint(0, len(self.solution[car][stop_place]) - 1)
             val = randint(0, abs(self.shop.products[self.solution[car][stop_place][product][0]] -
                                  self.solution[car][stop_place][product][1]))

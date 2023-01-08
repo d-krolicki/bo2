@@ -21,16 +21,20 @@ class GUI:
         self.root = root
         root.title('Sklep')
 
-        self.window_height = 500
+        self.window_height = 550
         self.window_width = 1200
-        root.geometry("{}x{}".format(self.window_width, self.window_height))
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x_cordinate = int((screen_width / 2) - (self.window_width / 2))
+        y_cordinate = int((screen_height / 2) - (self.window_height / 2))
+        self.root.geometry("{}x{}".format(self.window_width, self.window_height, x_cordinate, y_cordinate))
 
         # Icon
-        root.iconbitmap('diagram_v2_29.ico')
+        self.root.iconbitmap('diagram_v2_29.ico')
 
         # Set Azure style
         style = ttk.Style(root)
-        root.tk.call('source', 'azure/azure.tcl')
+        self.root.tk.call('source', 'azure/azure.tcl')
         style.theme_use('azure')
         style.configure("Accentbutton", foreground='white')
 
@@ -54,14 +58,14 @@ class GUI:
 
         # ===============================WINDOW======================================
         # Frames
-        self.paramsFrame = ttk.LabelFrame(self.root, text='Parametry', width=250, height=360)
+        self.paramsFrame = ttk.LabelFrame(self.root, text='Parametry', width=250, height=410)
         self.paramsFrame.place(x=400, y=12)
-        self.propFrame = ttk.LabelFrame(self.paramsFrame, text='Prawdopodobieństwo', width=200, height=215)
+        self.propFrame = ttk.LabelFrame(self.paramsFrame, text='Prawdopodobieństwo', width=200, height=265)
         self.propFrame.place(x=20, y=15)
-        self.dataFrame = ttk.LabelFrame(self.root, text='Dane', width=355, height=480)
+        self.dataFrame = ttk.LabelFrame(self.root, text='Dane', width=355, height=530)
         self.dataFrame.place(x=20, y=12)
-        self.algoFrame = ttk.LabelFrame(self.root, text='Algorytm', width=250, height=100)
-        self.algoFrame.place(x=400, y=390)
+        self.algoFrame = ttk.LabelFrame(self.root, text='Algorytm', width=250, height=102)
+        self.algoFrame.place(x=400, y=440)
 
         # Plotting
         # self.fig = plt.Figure(figsize=(5, 3), dpi=100)
@@ -72,47 +76,53 @@ class GUI:
         # self.canvas.draw()
         # self.canvas.get_tk_widget().place(x=650, y=0)
 
-
-
-
         # Labels
         ttk.Label(self.propFrame, text="Mutacji 1").place(x=20, y=15)
         ttk.Label(self.propFrame, text="Mutacji 2").place(x=20, y=62)
         ttk.Label(self.propFrame, text="Mutacji 3").place(x=20, y=109)
-        ttk.Label(self.propFrame, text="Krzyżowania").place(x=20, y=156)
-        ttk.Label(self.paramsFrame, text="Liczebność\npopulacji").place(x=40, y=245)
-        ttk.Label(self.paramsFrame, text="Liczba iteracji").place(x=40, y=303)
-        self.pathW = tk.Label(self.dataFrame, text="Filepath:")
-        self.pathW.place(x=160, y=20)
-        self.pathC = tk.Label(self.dataFrame, text="Filepath:")
-        self.pathC.place(x=160, y=65)
-        self.pathP = tk.Label(self.dataFrame, text="Filepath:")
-        self.pathP.place(x=160, y=110)
-        self.pathD = tk.Label(self.dataFrame, text="Filepath:")
-        self.pathD.place(x=160, y=155)
+        ttk.Label(self.propFrame, text="Mutacji 4").place(x=20, y=156)
+        ttk.Label(self.propFrame, text="Krzyżowania").place(x=20, y=203)
+        ttk.Label(self.paramsFrame, text="Liczebność\npopulacji").place(x=40, y=295)
+        ttk.Label(self.paramsFrame, text="Liczba iteracji").place(x=40, y=353)
 
-        self.errorLabel = tk.Label(root, text=' ')
-        self.errorLabel.place(x=920, y=450)
+        self.pathW = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathW.place(x=160, y=13)
+        self.pathC = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathC.place(x=160, y=73)
+        self.pathP = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathP.place(x=160, y=133)
+        self.pathD = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
+        self.pathD.place(x=160, y=193)
+
+        self.errorLabel = tk.Label(root, text=' ', justify=LEFT)
+        self.errorLabel.place(x=1030, y=400)
 
         # Inputs
         self.inM1 = ttk.Entry(self.propFrame, width=8)
+        self.inM1.insert(0, '0.1')
         self.inM1.place(x=110, y=8)
         self.inM2 = ttk.Entry(self.propFrame, width=8)
+        self.inM2.insert(0, '0.1')
         self.inM2.place(x=110, y=55)
         self.inM3 = ttk.Entry(self.propFrame, width=8)
+        self.inM3.insert(0, '0.1')
         self.inM3.place(x=110, y=102)
-        # self.inM4 = ttk.Entry(self.propFrame, width=8)
-        # self.inM4.place(x=110, y=102)
+        self.inM4 = ttk.Entry(self.propFrame, width=8)
+        self.inM4.insert(0, '0.1')
+        self.inM4.place(x=110, y=149)
         self.inK = ttk.Entry(self.propFrame, width=8)
-        self.inK.place(x=110, y=149)
+        self.inK.insert(0, '0.1')
+        self.inK.place(x=110, y=196)
         self.inPop = ttk.Entry(self.paramsFrame, width=8)
-        self.inPop.place(x=130, y=245)
+        self.inPop.insert(0, '10')
+        self.inPop.place(x=130, y=295)
         self.inIt = ttk.Entry(self.paramsFrame, width=8)
-        self.inIt.place(x=130, y=295)
+        self.inIt.insert(0, '10')
+        self.inIt.place(x=130, y=346)
 
         # Notebook
-        self.notebook = ttk.Notebook(self.dataFrame)
-        self.notebook.place(x=20, y=250)
+        self.notebook = ttk.Notebook(self.dataFrame, width=150, height=180)
+        self.notebook.place(x=20, y=290)
 
         # karty w notatniku
         self.tabW = ttk.Frame(self.notebook, width=150, height=150)
@@ -125,16 +135,16 @@ class GUI:
         self.notebook.add(self.tabD, text='Dystanse')
 
         # scrolled texts
-        self.scrtextW = st.ScrolledText(self.tabW, width=45, height=10, state='disabled')
+        self.scrtextW = st.ScrolledText(self.tabW, width=45, height=12, state='disabled')
         self.scrtextW.pack()
-        self.scrtextC = st.ScrolledText(self.tabC, width=45, height=10, state='disabled')
+        self.scrtextC = st.ScrolledText(self.tabC, width=45, height=12, state='disabled')
         self.scrtextC.pack()
-        self.scrtextP = st.ScrolledText(self.tabP, width=45, height=10, state='disabled')
+        self.scrtextP = st.ScrolledText(self.tabP, width=45, height=12, state='disabled')
         self.scrtextP.pack()
-        self.scrtextD = st.ScrolledText(self.tabD, width=45, height=10, state='disabled')
+        self.scrtextD = st.ScrolledText(self.tabD, width=45, height=12, state='disabled')
         self.scrtextD.pack()
-        self.scrtextSolution = st.ScrolledText(self.root, width=55, height=10, state='disabled')
-        self.scrtextSolution.place(x=670, y=320)
+        self.scrtextSolution = st.ScrolledText(self.root, width=55, height=14.5, state='disabled')
+        self.scrtextSolution.place(x=670, y=313)
 
         # Buttons
         self.get_wholB = ttk.Button(self.dataFrame, text='Wgraj hurtownie', style='Accentbutton',
@@ -143,18 +153,18 @@ class GUI:
         self.get_wholB.place(x=20, y=15)
         self.get_carsB = ttk.Button(self.dataFrame, text='Wgraj samochody', style='Accentbutton',
                                     command=lambda: self.browser_cars(), width=16)
-        self.get_carsB.place(x=20, y=60)
+        self.get_carsB.place(x=20, y=75)
         self.get_prodB = ttk.Button(self.dataFrame, text='Wgraj produkty', style='Accentbutton',
                                     command=lambda: self.browser_products(),
                                     width=16)
-        self.get_prodB.place(x=20, y=105)
+        self.get_prodB.place(x=20, y=135)
         self.get_distB = ttk.Button(self.dataFrame, text='Wgraj dystanse', style='Accentbutton',
                                     command=lambda: self.browser_distances(),
                                     width=16)
-        self.get_distB.place(x=20, y=150)
+        self.get_distB.place(x=20, y=195)
         self.get_all = ttk.Button(self.dataFrame, text='Wgraj automatycznie', style='Accentbutton',
                                   command=lambda: self.browser_all())
-        self.get_all.place(x=20, y=195)
+        self.get_all.place(x=20, y=250)
         self.startAlgoB = ttk.Button(self.algoFrame, text='Uruchom algorytm', style='Accentbutton',
                                      command=lambda: self.start())
         self.startAlgoB.place(x=60, y=45)
@@ -168,6 +178,7 @@ class GUI:
     # ===============================METHODS======================================
     # Reading .txt files
     def browser_distances(self):
+        self.distancesData = []
         self.distancesFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
                                                             filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
         if self.distancesFilePath:
@@ -180,9 +191,10 @@ class GUI:
                     if lines:
                         self.distancesData.append([int(i) for i in lines])
                 self.scrtextD.configure(state='disabled')
-        self.pathD.configure(text='Filepath:' + self.distancesFilePath)
+        self.pathD.configure(text='Filepath:\n' + self.distancesFilePath)
 
     def browser_wholsel(self):
+        self.wholsalersData = []
         if self.distancesData == [] or self.distancesData is None:
             self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
             pass
@@ -199,11 +211,12 @@ class GUI:
                     self.scrtextW.insert(tk.INSERT, lines)
                     lines = lines.split()
                     self.wholsalersData.append(lines)
-                    self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
+                    # self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
                 self.scrtextW.configure(state='disabled')
-        self.pathW.configure(text='Filepath:' + self.wholsalersFilePath)
+        self.pathW.configure(text='Filepath:\n' + self.wholsalersFilePath)
 
     def browser_cars(self):
+        self.carsData = []
         self.carsFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
                                                        filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
         if self.carsFilePath:
@@ -215,13 +228,13 @@ class GUI:
                     lines = lines.split()
                     if lines:
                         self.carsData.append([val if count == 0 else int(val) for count, val in enumerate(lines)])
-                for c in self.carsData:
-                    self.shop.add_car(Car(c[0], c[1]))
+                # for c in self.carsData:
+                #     self.shop.add_car(Car(c[0], c[1]))
                 self.scrtextC.configure(state='disabled')
-
-        self.pathC.configure(text='Filepath:' + self.carsFilePath)
+        self.pathC.configure(text='Filepath:\n' + self.carsFilePath)
 
     def browser_products(self):
+        self.productsData = []
         self.productsFilePath = filedialog.askopenfilename(initialdir="/", title="Select a File",
                                                            filetypes=(("Text files", "*.txt*"), ("all files", "*.*")))
         if self.productsFilePath:
@@ -234,14 +247,17 @@ class GUI:
                     if lines:
                         self.productsData.append(
                             [val.replace("_", " ") if count == 0 else int(val) for count, val in enumerate(lines)])
-                for p in self.productsData:
-                    self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod),
-                                                   randint(1, 100))
+                # for p in self.productsData:
+                #     self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod),
+                #                                    randint(1, 100))
                 self.scrtextP.configure(state='disabled')
-        self.pathP.configure(text='Filepath:' + self.productsFilePath)
+        self.pathP.configure(text='Filepath:\n' + self.productsFilePath)
 
     def browser_all(self):
-        # self.cleanData()
+        self.wholsalersData = []
+        self.carsData = []
+        self.productsData = []
+        self.distancesData = []
 
         if not self.distancesFilePath:
             with open('Data/distances.txt', mode="r", encoding="utf-8") as input_file:
@@ -253,7 +269,7 @@ class GUI:
                     if line:
                         self.distancesData.append([int(i) for i in line])
                 self.scrtextD.configure(state='disabled')
-        self.pathD.configure(text='Filepath: ' + 'Data/distances.txt')
+        self.pathD.configure(text='Filepath:\n' + 'Data/distances.txt')
 
         if not self.wholsalersFilePath:
             if self.distancesData == [] or self.distancesData is None:
@@ -272,9 +288,9 @@ class GUI:
                     if self.distancesData == [] or self.distancesData is None:
                         self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
                         pass
-                    self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
+                    # self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
                 self.scrtextW.configure(state='disabled')
-        self.pathW.configure(text='Filepath: ' + 'Data/Hurtownie.txt')
+        self.pathW.configure(text='Filepath:\n' + 'Data/Hurtownie.txt')
 
         if not self.carsFilePath:
             with open('Data/cars.txt', mode="r", encoding="utf-8") as input_file:
@@ -285,11 +301,11 @@ class GUI:
                     lines = lines.split()
                     if lines:
                         self.carsData.append([val if count == 0 else int(val) for count, val in enumerate(lines)])
-                for c in self.carsData:
-                    self.shop.add_car(Car(c[0], c[1]))
+                # for c in self.carsData:
+                #     self.shop.add_car(Car(c[0], c[1]))
                 self.scrtextC.configure(state='disabled')
 
-        self.pathC.configure(text='Filepath:' + 'Data/cars.txt')
+        self.pathC.configure(text='Filepath:\n' + 'Data/cars.txt')
 
         if not self.productsFilePath:
             with open('Data/Produkty.txt', mode="r", encoding="utf-8") as input_file:
@@ -301,18 +317,11 @@ class GUI:
                     if lines:
                         self.productsData.append(
                             [val.replace("_", " ") if count == 0 else int(val) for count, val in enumerate(lines)])
-                for p in self.productsData:
-                    self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod),
-                                                   randint(1, 100))
+                # for p in self.productsData:
+                #     self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod),
+                #                                    randint(1, 100))
                 self.scrtextP.configure(state='disabled')
-        self.pathP.configure(text='Filepath: ' + 'Data/produkty.txt')
-
-    def plotting(self):
-        plt.title('Przebieg funkcji celu dla najlepszych osobników w iteracji')
-        plt.xlabel('Numer iteracji')
-        plt.ylabel('Wartość funkcji celu')
-        plt.plot(self.toPlot)
-        plt.show()
+        self.pathP.configure(text='Filepath:\n' + 'Data/produkty.txt')
 
     # def cleanVariables(self):
     #     self.wholsalersFilePath = None
@@ -326,32 +335,44 @@ class GUI:
     #
     #     self.shop = Shop()
     #
-    # def cleanData(self):
-    #     self.paramsData = []
-    #     self.wholsalersData = []
-    #     self.carsData = []
-    #     self.productsData = []
-    #     self.distancesData = []
+    def cleanData(self):
+        self.shop = Shop()
+
+        for p in self.productsData:
+            self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod), randint(1, 100))
+
+        for c in self.carsData:
+            self.shop.add_car(Car(c[0], c[1]))
+
+        for count, lines in enumerate(self.wholsalersData):
+            if self.distancesData == [] or self.distancesData is None:
+                self.errorLabel.configure(text='Error: najpierw wgraj plik z dystansami')
+                pass
+            self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
 
     def start(self):
         # TODO: poprawa propM4
+        self.cleanData()
+        # self.scrtextSolution.delete(1.0, END)
         popVal = self.inPop.get()
         itVal = self.inIt.get()
         propM1 = self.inM1.get()
         propM2 = self.inM2.get()
         propM3 = self.inM3.get()
-        # propM4 = int(self.inM4.get())
-        # propM4 = '0.1'
+        propM4 = self.inM4.get()
+        propC = self.inK.get()
         toplot = None
 
         conditions = 0
 
-        if popVal == '' or itVal == '' or propM1 == '' or propM2 == '' or propM3 == '':  # zmienna nie jest wpisana
-            self.errorLabel.configure(text='Error: uzupełnij parametry')
+        if popVal == '' or itVal == '' or propM1 == '' or propM2 == '' or propM3 == '' or propM4 == '' or propC == '':  # zmienna nie jest wpisana
+            self.errorLabel.configure(text='Error:\nuzupełnij parametry')
             conditions += 1
 
-        if not (popVal.isnumeric() and itVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace('.', '', 1).isdigit() and propM3.replace('.', '', 1).isdigit()): # zmienna nie jest liczbą
-            self.errorLabel.configure(text='Error: niepoprawna wartość parametru')
+        if not (popVal.isnumeric() and itVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace(
+                '.', '', 1).isdigit() and propM3.replace('.', '', 1).isdigit() and propM4.replace('.', '', 1).isdigit()
+                and propC.replace('.', '', 1).isdigit()):  # zmienna nie jest liczbą
+            self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
             conditions += 1
         else:
             popVal = int(popVal)
@@ -359,13 +380,16 @@ class GUI:
             propM1 = float(propM1)
             propM2 = float(propM2)
             propM3 = float(propM3)
-            # propM4 = int(propM4)
-            if propM1 < 0 or propM1 > 1 or propM2 < 0 or propM2 > 1 or propM3 < 0 or propM3 > 1:
-                self.errorLabel.configure(text='Error: niekompletne pliki z danymi')
+            propM4 = float(propM4)
+            propC = float(propC)
+
+            if propM1 < 0 or propM1 > 1 or propM2 < 0 or propM2 > 1 or propM3 < 0 or propM3 > 1 or propM4 < 0 \
+                    or propM4 > 1 or propC < 0 or propC > 1 or popVal < 0 or itVal < 0:
+                self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
                 conditions += 1
 
         if self.wholsalersData == [] or self.carsData == [] or self.productsData == [] or self.distancesData == []:  # nie ma wgranych danych
-            self.errorLabel.configure(text='Error: niekompletne pliki z danymi')
+            self.errorLabel.configure(text='Error:\nniekompletne pliki z danymi')
             conditions += 1
 
         if conditions == 0:
@@ -373,12 +397,12 @@ class GUI:
                 for w in self.shop.wholesalers:
                     for p in self.shop.products:
                         w.add_product_for_wholesaler(p, randint(0, 100))
-                    solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3)
+                solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3, propM4)
 
                 if toplot and solution:
                     solution2print = solution.__str__()
                     self.scrtextSolution.configure(state='normal')
-                    self.scrtextD.delete(1.0, END)
+                    self.scrtextSolution.delete(1.0, END)
                     self.scrtextSolution.insert(tk.INSERT, solution2print)
                     self.scrtextSolution.configure(state='disabled')
 
@@ -392,12 +416,12 @@ class GUI:
                 for w in self.shop.wholesalers:
                     for p in self.shop.products:
                         w.add_product_for_wholesaler(p, randint(0, 100))
-                solution, toplot = algo2(self.shop, itVal)
+                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC)
 
                 if toplot and solution:
                     solution2print = solution.__str__()
                     self.scrtextSolution.configure(state='normal')
-                    self.scrtextD.delete(1.0, END)
+                    self.scrtextSolution.delete(1.0, END)
                     self.scrtextSolution.insert(tk.INSERT, solution2print)
                     self.scrtextSolution.configure(state='disabled')
 
@@ -408,4 +432,4 @@ class GUI:
                     fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
 
             else:
-                self.errorLabel.configure(text='Error: nie wybrano algorytmu')
+                self.errorLabel.configure(text='Error:\nnie wybrano algorytmu')

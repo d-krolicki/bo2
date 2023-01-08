@@ -132,6 +132,7 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                     test.population[-1] = tempSample
                 test.sort()
 
+
             calculate_cost_fun(test, penaltyVal)
             changesInPopulation -= 1
 
