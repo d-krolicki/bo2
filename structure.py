@@ -4,13 +4,12 @@ from typing import List, Tuple
 import copy
 
 
-# seed(10)
+seed(10)
 
 
 class Car:
     '''
     Class representing a car.
-
         Attributes
         ----------
         name : str
@@ -27,7 +26,6 @@ class Car:
 class Product:
     '''
     Class representing a product.
-
         Attributes
         ----------
         name : str
@@ -47,7 +45,6 @@ class Product:
 class Wholesaler:
     '''
     Class representing a wholesaler.
-
         Attributes
         ----------
         name : str
@@ -57,7 +54,6 @@ class Wholesaler:
         products : Dict[Product : List[int, float, int]]
             Dictionary of products available from the wholesaler.
                 @:key Object of class Product
-
                 @:value List containing product's ID, product's price specific
                 for the given Wholesaler, and amount of available products.
         distances : List
@@ -73,18 +69,16 @@ class Wholesaler:
     def add_product_for_wholesaler(self, product: Product, amount: int) -> None:
         """
         Method covering adding a product to wholesaler's assortment.
-
         :param product: Object of class Product to be added.
         :param amount: Amount of added objects.
         :return: None
         """
-        self.products[product] = [product.id, product.price + round(uniform(-0.5, 0.5), 2), amount]
+        self.products[product] = [product.id, product.price + round(uniform(-product.price, product.price), 2), amount]
 
 
 class Shop:
     '''
     Class representing a shop.
-
         Attributes
         ----------
         max_id_hurt : int
@@ -109,7 +103,6 @@ class Shop:
     def add_wholesaler(self, wholesaler: Wholesaler) -> None:
         """
         Method covering adding a wholesaler to the list of wholesalers available for the shop.
-
         :param wholesaler: Wholesaler to be added.
         :return: None
         """
@@ -119,7 +112,6 @@ class Shop:
     def add_product_for_shop(self, product: Product, demand: int) -> None:
         """
         Method covering adding a Product with demand for it to the shop.
-
         :param product: Product to be added.
         :param demand: Demand for the product being added.
         :return: None
@@ -130,7 +122,6 @@ class Shop:
     def add_car(self, car: Car):
         """
         Method covering adding an available car for the shop.
-
         :param car: Car to be added.
         :return: None
         """
@@ -150,7 +141,6 @@ class Solution:
 class Sample:
     """
     Class representing a sample solution of the problem.
-
         Attributes
         ----------
         shop : Shop
@@ -159,7 +149,6 @@ class Sample:
             Value of the objective function for this particular solution.
         solution : List[List[List[Tuple[Product, int]]]]
             Custom solution form for the solved problem.
-
             The outermost list consists of solutions to sub-problems of shopping lists for all the cars.
             Each of those shopping lists consists of smaller shopping lists,
             each one concerning a different order from the same or different wholesalers.
@@ -179,7 +168,6 @@ class Sample:
     def __str__(self) -> str:  # UWAGA działa tylko gdy liczba produktów we wszystkich hurtowniach jest taka sama
         """
         Method handling printing out solution in a easily readable form to the console.
-
         :return: Solution in a readable form.
         """
         sol = '====================================\n'
@@ -197,10 +185,10 @@ class Sample:
             sol += '====================================\n'
         return sol
 
-    def mutation(self, random_change_value: bool, random_swap: bool, add_or_sub_stop: bool) -> List[List[List[Tuple]]]:
+    def mutation(self, random_change_value: bool = False, random_swap: bool = False, add_or_sub_stop: bool = False,
+                 sub_from_val: bool = False) -> List[List[List[Tuple]]]:
         """
         Method handling mutations of sample solutions in the genetic algorithm.
-
         :param random_change_value: Parameter deciding whether amount of products being bought should change or not.
         :param random_swap: Parameter deciding whether the visiting order for car should change or not.
         :param add_or_sub_stop: Parameter deciding whether one of the wholesalers to visit should be skipped or not.
@@ -240,14 +228,24 @@ class Sample:
                     stop_place = randint(0, len(self.solution[car]) - 1)
                     del self.solution[car][stop_place]
                     del self.paths[car][stop_place]
+        elif sub_from_val:
+            car = randint(0, len(self.solution) - 1)
+            stop_place = randint(0, len(self.solution[car]) - 1)
+            print(len(self.solution[car][stop_place]) - 1)
+            product = randint(0, len(self.solution[car][stop_place]) - 1)
+            val = randint(0, abs(self.shop.products[self.solution[car][stop_place][product][0]] -
+                                 self.solution[car][stop_place][product][1]))
+            if self.shop.products[self.solution[car][stop_place][product][0]] - self.solution[car][stop_place][product][
+                1] < 0:
+                val = val * (-1)
+            self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0], \
+                                                      self.solution[car][stop_place][product][1] + val
         return self.solution
 
     def objective_function(self, penalty_val: int = 10) -> float:
         """
         Method handling calculation of the sample solution's objective function value.
-
         Please un-comment print() functions below to see what the course looked like.
-
         :return: Objective function value for the given sample solution.
         """
 
@@ -261,6 +259,7 @@ class Sample:
         # TODO sprawdzanie czy produkty są w hurtowni
         demand = copy.copy(self.shop.products)
         self.cost = 0.0
+
         # print("========================================================================")
         # print("Starting delivery.")
         for j, car in enumerate(self.solution):
@@ -304,7 +303,6 @@ class Sample:
 class Population:
     """
     Class representing population of sample solutions generated by the genetic algorithm for the problem.
-
         Attributes
         ----------
         shop : Shop
@@ -324,7 +322,6 @@ class Population:
     def initial_sample(self):
         """
         Method handling creation of one initial sample solution.
-
         :param shop: Shop for which the sample solution is being generated.
         :return: None
         """
@@ -347,21 +344,15 @@ class Population:
     def crossover(self, parent1, parent2):
         """
         Method handling crossover of two sample solutions.
-        
+
         How it works
         ------------
         **Parents**:
-
         11111111
-
         00000000
-
         **Children**:
-
         11100000
-
         00011111
-
         :param **parent1**: First sample solution used to generate a new sample solution.
         :param **parent2**: Second sample solution used to generate a new sample solution.
         :return: None
@@ -398,7 +389,6 @@ class Population:
     def initial_population(self):
         """
         Method handling generation of the initial population of sample solutions.
-
         :return: None
         """
         for size in range(self.population_size):
@@ -418,3 +408,17 @@ class Population:
         lst_sorted = sorted(lst, key=lambda sample: sample.cost)
         self.population = lst_sorted
         # print(self.population[0])
+
+    def roulette_selection(self):
+        # Oblicz sumę wszystkich wartości funkcji przystosowania
+        total_fitness = sum(sample.cost for sample in self.population)
+
+        # Losuj liczbę z zakresu od 0 do sumy funkcji przystosowania
+        pick = uniform(0, total_fitness)
+
+        # Przeszukaj populację i zwróć osobnika, którego próg zostanie przekroczony
+        current = 0
+        for sample in self.population:
+            current += sample.cost
+            if current > pick:
+                return sample

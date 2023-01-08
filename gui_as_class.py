@@ -5,10 +5,11 @@ import tkinter.scrolledtext as st
 from tkinter import *
 import matplotlib
 import matplotlib.pyplot as plt
+import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
 
-matplotlib.use("TkAgg")
+# matplotlib.use("TkAgg")
 
 from algorithm import *
 
@@ -64,10 +65,15 @@ class GUI:
 
         # Plotting
         # self.fig = plt.Figure(figsize=(5, 3), dpi=100)
+        # t = np.arange(0, 3, .01)
+        # self.fig.add_subplot(111).plot(t, 2 * np.sin(2 * np.pi * t))
         # self.ax = self.fig.add_subplot(111)
         # self.canvas = FigureCanvasTkAgg(self.fig, master=self.root)
         # self.canvas.draw()
         # self.canvas.get_tk_widget().place(x=650, y=0)
+
+
+
 
         # Labels
         ttk.Label(self.propFrame, text="Mutacji 1").place(x=20, y=15)
@@ -86,7 +92,7 @@ class GUI:
         self.pathD.place(x=160, y=155)
 
         self.errorLabel = tk.Label(root, text=' ')
-        self.errorLabel.place(x=900, y=250)
+        self.errorLabel.place(x=920, y=450)
 
         # Inputs
         self.inM1 = ttk.Entry(self.propFrame, width=8)
@@ -95,6 +101,8 @@ class GUI:
         self.inM2.place(x=110, y=55)
         self.inM3 = ttk.Entry(self.propFrame, width=8)
         self.inM3.place(x=110, y=102)
+        # self.inM4 = ttk.Entry(self.propFrame, width=8)
+        # self.inM4.place(x=110, y=102)
         self.inK = ttk.Entry(self.propFrame, width=8)
         self.inK.place(x=110, y=149)
         self.inPop = ttk.Entry(self.paramsFrame, width=8)
@@ -125,6 +133,8 @@ class GUI:
         self.scrtextP.pack()
         self.scrtextD = st.ScrolledText(self.tabD, width=45, height=10, state='disabled')
         self.scrtextD.pack()
+        self.scrtextSolution = st.ScrolledText(self.root, width=55, height=10, state='disabled')
+        self.scrtextSolution.place(x=670, y=320)
 
         # Buttons
         self.get_wholB = ttk.Button(self.dataFrame, text='Wgraj hurtownie', style='Accentbutton',
@@ -324,21 +334,78 @@ class GUI:
     #     self.distancesData = []
 
     def start(self):
-        if self.radioButtonVar.get() == 1:
-            algo(self.shop)
+        # TODO: poprawa propM4
+        popVal = self.inPop.get()
+        itVal = self.inIt.get()
+        propM1 = self.inM1.get()
+        propM2 = self.inM2.get()
+        propM3 = self.inM3.get()
+        # propM4 = int(self.inM4.get())
+        # propM4 = '0.1'
+        toplot = None
 
-        elif self.radioButtonVar.get() == 2:
-            for w in self.shop.wholesalers:
-                for p in self.shop.products:
-                    w.add_product_for_wholesaler(p, randint(0, 100))
-            # solution, toplot = algo2(self.shop)
-            # self.toPlot = toplot
-            # self.plotting()
-            print(self.wholsalersData)
-            print(self.distancesData)
-            print(self.productsData)
-            print(self.carsData)
-            print(self.shop.wholesalers)
+        conditions = 0
 
+        if popVal == '' or itVal == '' or propM1 == '' or propM2 == '' or propM3 == '':  # zmienna nie jest wpisana
+            self.errorLabel.configure(text='Error: uzupełnij parametry')
+            conditions += 1
+
+        if not (popVal.isnumeric() and itVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace('.', '', 1).isdigit() and propM3.replace('.', '', 1).isdigit()): # zmienna nie jest liczbą
+            self.errorLabel.configure(text='Error: niepoprawna wartość parametru')
+            conditions += 1
         else:
-            self.errorLabel.configure(text='Error')
+            popVal = int(popVal)
+            itVal = int(itVal)
+            propM1 = float(propM1)
+            propM2 = float(propM2)
+            propM3 = float(propM3)
+            # propM4 = int(propM4)
+            if propM1 < 0 or propM1 > 1 or propM2 < 0 or propM2 > 1 or propM3 < 0 or propM3 > 1:
+                self.errorLabel.configure(text='Error: niekompletne pliki z danymi')
+                conditions += 1
+
+        if self.wholsalersData == [] or self.carsData == [] or self.productsData == [] or self.distancesData == []:  # nie ma wgranych danych
+            self.errorLabel.configure(text='Error: niekompletne pliki z danymi')
+            conditions += 1
+
+        if conditions == 0:
+            if self.radioButtonVar.get() == 1:  # algorytm 1
+                for w in self.shop.wholesalers:
+                    for p in self.shop.products:
+                        w.add_product_for_wholesaler(p, randint(0, 100))
+                    solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3)
+
+                if toplot and solution:
+                    solution2print = solution.__str__()
+                    self.scrtextSolution.configure(state='normal')
+                    self.scrtextD.delete(1.0, END)
+                    self.scrtextSolution.insert(tk.INSERT, solution2print)
+                    self.scrtextSolution.configure(state='disabled')
+
+                    fig = Figure(figsize=(5.5, 3), dpi=100)
+                    canvas = FigureCanvasTkAgg(fig, master=self.root)  # A tk.DrawingArea.
+                    canvas.draw()
+                    canvas.get_tk_widget().place(x=670, y=-10)
+                    fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
+
+            elif self.radioButtonVar.get() == 2:  # algorytm 2
+                for w in self.shop.wholesalers:
+                    for p in self.shop.products:
+                        w.add_product_for_wholesaler(p, randint(0, 100))
+                solution, toplot = algo2(self.shop, itVal)
+
+                if toplot and solution:
+                    solution2print = solution.__str__()
+                    self.scrtextSolution.configure(state='normal')
+                    self.scrtextD.delete(1.0, END)
+                    self.scrtextSolution.insert(tk.INSERT, solution2print)
+                    self.scrtextSolution.configure(state='disabled')
+
+                    fig = Figure(figsize=(5.5, 3), dpi=100)
+                    canvas = FigureCanvasTkAgg(fig, master=self.root)  # A tk.DrawingArea.
+                    canvas.draw()
+                    canvas.get_tk_widget().place(x=670, y=-10)
+                    fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
+
+            else:
+                self.errorLabel.configure(text='Error: nie wybrano algorytmu')

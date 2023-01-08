@@ -6,9 +6,11 @@ from utils import print_summary
 from gui import *
 from gui_as_class import *
 
+
 # stworzenie pustej struktury danych - sklepu
-
-
+#
+# nasz_sklep = Shop()
+#
 # # dodawanie produktów do sklepu
 # with open('Data/Produkty.txt', 'r', encoding='utf8') as f:
 #     prodMat = []
@@ -49,7 +51,8 @@ from gui_as_class import *
 
 
 if __name__ == "__main__":
-    # algo(nasz_sklep, penaltyVal=5)
+    # print(algo(nasz_sklep).cost)
+    # print(algo2(nasz_sklep)[0])
     # print(algo2(nasz_sklep))
 
     window = tk.Tk()
