@@ -2,21 +2,14 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>algo2</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body style="background-color:#faefde">
-<div style="font-family: courier">
-    <strong>GLOBAL</strong> CROSSOVER_PROBABILITY<br>
-    <strong>GLOBAL</strong> MUTATION_PROBABILITY_SWAP_AMOUNT<br>
-    <strong>GLOBAL</strong> MUTATION_PROBABILITY_VISIT_ORDER<br>
-    <strong>GLOBAL</strong> MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT<br>
-    <strong>GLOBAL</strong> MUTATION_PROBABILITY_SUBTRACT_AMOUNT<br>
-</div>
 <br>
 <div>
     <span style="font-family:courier">
-        <strong>procedure algo</strong><i>(Shop, iterationStop, changesInPopulation, populationSize, penVal)</i>
+        <strong>procedure algo2</strong><i>(Shop, iterationStop, changesInPopulation, populationSize, penVal, CROSSOVER_PROBABILITY, MUTATION_PROBABILITY_SWAP_AMOUNT, MUTATION_PROBABILITY_VISIT_ORDER, MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT, MUTATION_PROBABILITY_SUBTRACT_AMOUNT)</i>
         <br>
             <line30>
                 p = <i>new</i> Population<i>(shop, populationSize)</i>
@@ -78,6 +71,10 @@
                             <strong>sort</strong> p
                         </line120>
                         <br>
+                        <line120>
+                            <strong>end if</strong>
+                        </line120>
+                        <br>
                     <line90>
                         <strong>if</strong> mutation2P < MUTATION_PROBABILITY_VISIT_ORDER <strong>do</strong>
                     </line90>
@@ -88,6 +85,10 @@
                         <br>
                         <line120>
                             <strong>sort</strong> p
+                        </line120>
+                        <br>
+                        <line120>
+                            <strong>end if</strong>
                         </line120>
                         <br>
                     <line90>
@@ -102,6 +103,10 @@
                             <strong>sort</strong> p
                         </line120>
                         <br>
+                        <line120>
+                            <strong>end if</strong>
+                        </line120>
+                        <br>
                     <line90>
                         <strong>if</strong> mutation4P < MUTATION_PROBABILITY_SUBTRACT_AMOUNT <strong>do</strong>
                     </line90>
@@ -114,6 +119,10 @@
                             <strong>sort</strong> p
                         </line120>
                         <br>
+                        <line120>
+                            <strong>end if</strong>
+                        </line120>
+                        <br>
                     <line90>
                         <strong>if</strong> crossoverP < CROSSOVER_PROBABILITY <strong>do</strong>
                     </line90>
@@ -124,6 +133,10 @@
                         <br>
                         <line120>
                             <strong>sort</strong> p
+                        </line120>
+                        <br>
+                        <line120>
+                            <strong>end if</strong>
                         </line120>
                         <br>
                     <line90>
