@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>algo</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body style="background-color:#faefde">
+<br>
+<div>
+  <span style="font-family:courier">
+    <strong>procedure algo</strong><i>(Shop, iterationStop, changesInPopulation, populationSize, penVal, CROSSOVER_PROBABILITY, MUTATION_PROBABILITY_SWAP_AMOUNT, MUTATION_PROBABILITY_VISIT_ORDER, MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT, MUTATION_PROBABILITY_SUBTRACT_AMOUNT)</i>
+        <br>
+        <line30>
+            p = <i>new</i> Population<i>(shop, populationSize)</i>
+        </line30>
+        <br>
+        <line30>
+            <strong>initialize</strong> initial-population
+        </line30>
+        <br>
+        <line30>
+            <strong>calculate</strong> cost-function
+        </line30>
+        <br>
+        <line30>
+            <strong>sort</strong> p
+        </line30>
+        <br>
+        <line30>
+            <strong>for</strong> i <strong>in range</strong>(iterationStop) <strong>do</strong>
+        </line30>
+        <br>
+        <line60>
+            new_p &larr; <i>empty</i> list
+        </line60>
+        <br>
+        <line60>
+            <strong>for</strong> s <strong>in range</strong>(populationSize//2) <strong>do</strong>
+        </line60>
+        <br>
+        <line90>
+            crossP &larr; <strong>random</strong>(0,1)
+        </line90>
+        <br>
+        <line90>
+            <strong>if</strong> crossP < CROSSOVER_PROBABILITY <strong>do</strong>
+        </line90>
+        <br>
+        <line120>
+            par1 &larr; ROULETTE_SELECTION()
+        </line120>
+        <br>
+        <line120>
+            par2 &larr; ROULETTE_SELECTION()
+        </line120>
+        <br>
+        <line120>
+            {c1, c2} &larr; <strong>execute</strong> CROSSOVER(par1, par2)
+        </line120>
+        <br>
+        <line120>
+            <strong>insert</strong> c1 <strong>into</strong> new_p
+        </line120>
+        <br>
+        <line120>
+            <strong>insert</strong> c2 <strong>into</strong> new_p
+        </line120>
+        <br>
+        <line90>
+            <strong>end if</strong>
+        </line90>
+        <br>
+        <line60>
+            <strong>end for</strong>
+        </line60>
+        <br>
+        <line60>
+            p &larr; new_p
+        </line60>
+        <br>
+        <line60>
+            <strong>fill</strong> p
+        </line60>
+        <br>
+        <line60>
+            <strong>for</strong> t <strong>in range</strong>(populationSize) <strong>do</strong>
+        </line60>
+        <br>
+        <line90>
+            mutation1P &larr; <strong>random</strong>(0,1)
+        </line90>
+        <br>
+        <line90>
+            mutation2P &larr; <strong>random</strong>(0,1)
+        </line90>
+        <br>
+        <line90>
+            mutation3P &larr; <strong>random</strong>(0,1)
+        </line90>
+        <br>
+        <line90>
+            mutation4P &larr; <strong>random</strong>(0,1)
+        </line90>
+        <br>
+        <line90>
+            <strong>if</strong> mutation1P < MUTATION_PROBABILITY_SWAP_AMOUNT <strong>do</strong>
+        </line90>
+            <br>
+            <line120>
+                <strong>execute</strong> MUTATION_SWAP_AMOUNT
+            </line120>
+            <br>
+        <line90>
+            <strong>end if</strong>
+        </line90>
+        <br>
+        <line90>
+            <strong>if</strong> mutation2P < MUTATION_PROBABILITY_VISIT_ORDER <strong>do</strong>
+        </line90>
+            <br>
+            <line120>
+                <strong>execute</strong> MUTATION_VISIT_ORDER
+            </line120>
+            <br>
+        <line90>
+            <strong>end if</strong>
+        </line90>
+        <br>
+        <line90>
+            <strong>if</strong> mutation3P < MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT <strong>do</strong>
+        </line90>
+            <br>
+            <line120>
+                <strong>execute</strong> MUTATION_ADD_OR_REMOVE_POINT
+            </line120>
+            <br>
+        <line90>
+            <strong>end if</strong>
+        </line90>
+        <br>
+        <line90>
+            <strong>if</strong> mutation4P < MUTATION_PROBABILITY_SUBTRACT_AMOUNT <strong>do</strong>
+        </line90>
+            <br>
+            <line120>
+                <strong>execute</strong> MUTATION_SUBTRACT_AMOUNT
+            </line120>
+            <br>
+        <line90>
+            <strong>end if</strong>
+        </line90>
+        <br>
+        <line90>
+            <strong>calculate</strong> cost_function
+        </line90>
+        <br>
+        <line90>
+            <strong>sort</strong> p
+        </line90>
+        <br>
+        <line60>
+            <strong>end for</strong>
+        </line60>
+        <br>
+        <line30>
+            <strong>end for</strong>
+        </line30>
+        <br>
+        <line30>
+            <strong>return</strong> p[0]
+        </line30>
+        <br>
+        <line>
+            <strong>end procedure</strong>
+        </line>
+  </span>
+</div>
+</body>
+</html>

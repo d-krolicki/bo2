@@ -1,25 +1,13 @@
 from typing import List, Union, Any, Tuple
 from structure import *
-from random import randint
 import matplotlib.pyplot as plt
 
 from structure import Sample
-
-"""
-Wydaje mi sie, ze powinno przyjmowac argument po prostu obiekt typu Shop, a zwracac obiekt typu Solution.
-"""
-
-# CROSSOVER_PROBABILITY = 0.5
-# MUTATION_PROBABILITY_SWAP_AMOUNT = 0.01
-# MUTATION_PROBABILITY_VISIT_ORDER = 0.01
-# MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = 0.01
-# MUTATION_PROBABILITY_SUBTRACT_AMOUNT = 0.01
 
 
 def algo(shop: Shop, iterationStop: int = 10, populationSize: int = 10, probablityM1: float = 0.1,
          probablityM2: float = 0.1, probablityM3: float = 0.1, probablityM4: float = 0.1, probabilityC: float = 0.1,
          penaltyVal: int = 10) -> tuple[Any, list[Any]]:
-
     CROSSOVER_PROBABILITY = probabilityC
     MUTATION_PROBABILITY_SWAP_AMOUNT = probablityM1
     MUTATION_PROBABILITY_VISIT_ORDER = probablityM2
@@ -32,11 +20,14 @@ def algo(shop: Shop, iterationStop: int = 10, populationSize: int = 10, probabli
     test.initial_population()
     for s in range(populationSize):
         test.population[s].objective_function(penaltyVal)
+
     test.sort()
+
     najlepszy = test.population[0]
     for i in range(iterationStop):
 
         newPopulation = []
+
         for s in range(0, int(populationSize / 2)):
             crossP = random()
 
@@ -45,7 +36,6 @@ def algo(shop: Shop, iterationStop: int = 10, populationSize: int = 10, probabli
                 newPopulation.append(child1)
                 newPopulation.append(child2)
         test.population = newPopulation
-        # print(i)
         test.fill_population()
 
         for s in range(populationSize):
@@ -71,12 +61,10 @@ def algo(shop: Shop, iterationStop: int = 10, populationSize: int = 10, probabli
 
         test.sort()
         toplot.append(test.population[0].cost)
+
         if najlepszy.cost > test.population[0].cost:
             najlepszy = test.population[0]
         zmiana_najlepszego_osobnika.append(najlepszy.cost)
-
-    # plt.plot(zmiana_najlepszego_osobnika)
-    # plt.show()
 
     return najlepszy, zmiana_najlepszego_osobnika
 
@@ -93,7 +81,6 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
     MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = probablityM3
     MUTATION_PROBABILITY_SUBTRACT_AMOUNT = probablityM4
     toplot = []
-
     while iterationStop > 0:  # liczba iteracji STOP
         changesInPopulation = changesInPopulationValue
         while changesInPopulation > 0:  # liczba podjętych prób zmian w populacji
@@ -108,7 +95,7 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
 
             if mutation1P < MUTATION_PROBABILITY_SWAP_AMOUNT:  # czy mutacja ma się wykonać?
                 s = fractional_probability(test)  # wybieranie osobnika do mutacji
-                tempSample = copy.deepcopy(test.population[s])  # skopiowanie osobnika
+                tempSample = test.population[s]  # skopiowanie osobnika
                 tempSample.mutation(True, False, False, False)  # wykonanie mutacji osobnika
                 tempSample.objective_function(penaltyVal)  # obliczenie jego funkcji celu
                 if tempSample.cost < test.population[-1].cost:  # dodanie do populacji jeśli jest lepszy od najgorszego
@@ -117,7 +104,7 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
 
             if mutation2P < MUTATION_PROBABILITY_VISIT_ORDER:
                 s = fractional_probability(test)
-                tempSample = copy.deepcopy(test.population[s])
+                tempSample = test.population[s]
                 tempSample.mutation(False, True, False, False)
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
@@ -126,7 +113,7 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
 
             if mutation3P < MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT:
                 s = fractional_probability(test)
-                tempSample = copy.deepcopy(test.population[s])
+                tempSample = test.population[s]
                 tempSample.mutation(False, False, True, False)
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
@@ -160,9 +147,6 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
 
         toplot.append(test.population[0].cost)
         iterationStop -= 1
-
-    # plt.plot(toplot)
-    # plt.show()
 
     return [test.population[0], toplot]
 

@@ -185,8 +185,10 @@ class Sample:
             sol += '====================================\n'
         return sol
 
+
     def mutation(self, random_change_value: bool = False, random_swap: bool = False, add_or_sub_stop: bool = False,
                  sub_from_val: bool = False) -> List[List[List[Tuple]]]:
+
         """
         Method handling mutations of sample solutions in the genetic algorithm.
         :param random_change_value: Parameter deciding whether amount of products being bought should change or not.
@@ -239,7 +241,9 @@ class Sample:
                 val = val * (-1)
             self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0], \
                                                       self.solution[car][stop_place][product][1] + val
+
         return self.solution
+
 
     def objective_function(self, penalty_val: int = 10) -> float:
         """
@@ -247,18 +251,8 @@ class Sample:
         Please un-comment print() functions below to see what the course looked like.
         :return: Objective function value for the given sample solution.
         """
-
-        """
-        @ TODO:
-        - sprawdzanie pokrycia zapotrzebowania,
-        - funkcja kary:
-            - kiedy kupimy zbyt mało lub zbyt dużo w kwestii zapotrzebowania,
-            - kiedy kupimy zbyt dużo i przeładujemy samochód.
-        """
-        # TODO sprawdzanie czy produkty są w hurtowni
         demand = copy.copy(self.shop.products)
         self.cost = 0.0
-
         # print("========================================================================")
         # print("Starting delivery.")
         for j, car in enumerate(self.solution):
@@ -291,8 +285,6 @@ class Sample:
         for index, value in enumerate(demand.values()):
             self.cost += abs(value) * penalty_val
             # print(f"Penalty function value for product: {abs(value) * punish_val} ")
-
-            # @TODO: zmienic jak nie bedzie dzialac - dostosowac parametry
         # print(f"{[self.shop.products[key] for key in self.shop.products.keys()]}")
         # print("Ending delivery.")
         # print("========================================================================")
