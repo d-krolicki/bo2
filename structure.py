@@ -73,7 +73,7 @@ class Wholesaler:
         :param amount: Amount of added objects.
         :return: None
         """
-        self.products[product] = [product.id, product.price + round(uniform(-product.price, product.price), 2), amount]
+        self.products[product] = [product.id, product.price + round(uniform(-product.price /2, product.price/2)), amount]
 
 
 class Shop:
@@ -175,10 +175,10 @@ class Sample:
             sol += f'Samochód {c + 1}\n\n'
             sol += '{:20}'.format('Produkt \ Hurtownia')
             for w in self.paths[c]:  # iteracja po drogach (wypisanie indeksów hurtowni)
-                sol += f'{w.id: 4} '
+                sol += f'{str(w.id)} '
             sol += '\n'
             for p in range(len(self.solution[c][0])):  # iteracja po produktach (kolumnach)
-                sol += f'{self.solution[c][0][p][0].name:20} '
+                sol += f'{self.solution[c][0][p][0].name:20}'
                 for h in range(len(self.paths[c])):  # iteracja po hurtowniach (wierszach)
                     sol += f'{self.solution[c][h][p][1]:3}  '
                 sol += '\n'
@@ -199,7 +199,7 @@ class Sample:
             car = randint(0, len(self.solution) - 1)
             stop_place = randint(0, len(self.solution[car]) - 1)
             product = randint(0, len(self.solution[car][stop_place]) - 1)
-            val = randint(0, int(100))
+            val = randint(0, 100)
             self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0], val
         elif random_swap:
             car = randint(0, len(self.solution) - 1)
@@ -289,7 +289,7 @@ class Sample:
                 # print(f"Returns in shop {self.paths[j][i].id} : {returns}")
                 self.cost += returns * self.paths[j][0].distances[-1]
         for index, value in enumerate(demand.values()):
-            self.cost += abs(value) * penalty_val
+            self.cost +=   penalty_val * int(1.1 **(abs(value)//10))
             # print(f"Penalty function value for product: {abs(value) * punish_val} ")
 
             # @TODO: zmienic jak nie bedzie dzialac - dostosowac parametry
@@ -336,7 +336,7 @@ class Population:
             i = 0
             for w in path:  # iteracja po ID hurtowni
                 for product in w.products:
-                    solution[car][i].append((product, randint(0, np.round(200))))
+                    solution[car][i].append((product, randint(0, np.round(50))))
                 i += 1
         return Sample(shop=self.shop, solution=solution, paths=paths)
 

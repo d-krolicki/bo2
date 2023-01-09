@@ -102,7 +102,7 @@ class GUI:
         self.inM4.insert(0, '0.1')
         self.inM4.place(x=110, y=149)
         self.inK = ttk.Entry(self.propFrame, width=8)
-        self.inK.insert(0, '0.1')
+        self.inK.insert(0, '0.98')
         self.inK.place(x=110, y=196)
         self.inPop = ttk.Entry(self.paramsFrame, width=8)
         self.inPop.insert(0, '10')
@@ -318,7 +318,7 @@ class GUI:
         self.shop = Shop()
 
         for p in self.productsData:
-            self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod), randint(1, 100))
+            self.shop.add_product_for_shop(Product(name=p[0], price=p[1], id_p=self.shop.max_id_prod), p[1])
 
         for c in self.carsData:
             self.shop.add_car(Car(c[0], c[1]))
@@ -374,7 +374,7 @@ class GUI:
             if self.radioButtonVar.get() == 1:  # algorytm 1
                 for w in self.shop.wholesalers:
                     for p in self.shop.products:
-                        w.add_product_for_wholesaler(p, randint(0, 100))
+                        w.add_product_for_wholesaler(p, randint(1, 10))
                 solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3, propM4)
 
                 if toplot and solution:
