@@ -394,7 +394,7 @@ class GUI:
                 for w in self.shop.wholesalers:
                     for p in self.shop.products:
                         w.add_product_for_wholesaler(p, randint(0, 100))
-                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC)
+                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC, penaltyVal=100)
 
                 if toplot and solution:
                     solution2print = solution.__str__()
