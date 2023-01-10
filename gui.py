@@ -373,8 +373,10 @@ class GUI:
         if conditions == 0:
             if self.radioButtonVar.get() == 1:  # algorytm 1
                 for w in self.shop.wholesalers:
-                    for p in self.shop.products:
-                        w.add_product_for_wholesaler(p, randint(1, 10))
+                    id_ = 0
+                    for p in self.shop.products.items():
+                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
+                        id_ += 1
                 solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3, propM4)
 
                 if toplot and solution:
@@ -392,9 +394,11 @@ class GUI:
 
             elif self.radioButtonVar.get() == 2:  # algorytm 2
                 for w in self.shop.wholesalers:
-                    for p in self.shop.products:
-                        w.add_product_for_wholesaler(p, randint(0, 100))
-                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC, penaltyVal=100)
+                    id_ = 0
+                    for p in self.shop.products.items():
+                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
+                        id_ += 1
+                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC)
 
                 if toplot and solution:
                     solution2print = solution.__str__()
