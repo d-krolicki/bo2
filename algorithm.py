@@ -100,10 +100,10 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)  # obliczenie jego funkcji celu
                 if tempSample.cost < test.population[-1].cost:  # dodanie do populacji jeśli jest lepszy od najgorszego
                     test.population[-1] = tempSample
-                    for i in range(1,test.population_size):
-                        poprz = -i-1
+                    for i in range(1, test.population_size):
+                        poprz = -i - 1
                         if test.population[-i].cost < test.population[poprz].cost:
-                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
                         else:
                             break
 
@@ -114,10 +114,10 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
-                    for i in range(1,test.population_size):
-                        poprz = -i-1
+                    for i in range(1, test.population_size):
+                        poprz = -i - 1
                         if test.population[-i].cost < test.population[poprz].cost:
-                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
                         else:
                             break
 
@@ -128,10 +128,10 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
-                    for i in range(1,test.population_size):
-                        poprz = -i-1
+                    for i in range(1, test.population_size):
+                        poprz = -i - 1
                         if test.population[-i].cost < test.population[poprz].cost:
-                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
                         else:
                             break
 
@@ -142,32 +142,32 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
-                    for i in range(1,test.population_size):
-                        poprz = -i-1
+                    for i in range(1, test.population_size):
+                        poprz = -i - 1
                         if test.population[-i].cost < test.population[poprz].cost:
-                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
                         else:
                             break
             if crossoverP < CROSSOVER_PROBABILITY:
                 s1 = fractional_probability(test)
                 s2 = fractional_probability(test)
-                child1, child2 = test.crossover(copy.deepcopy(test.population[s1]),copy.deepcopy(test.population[s2]))
+                child1, child2 = test.crossover(copy.deepcopy(test.population[s1]), copy.deepcopy(test.population[s2]))
                 child1.objective_function(penaltyVal)
                 child2.objective_function(penaltyVal)
                 test.population.append(child1)
                 test.population_size = len(test.population)
-                for i in range(1,test.population_size):
-                    poprz = -i-1
+                for i in range(1, test.population_size):
+                    poprz = -i - 1
                     if test.population[-i].cost < test.population[poprz].cost:
-                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                        test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
                     else:
                         break
                 test.population.append(child2)
                 test.population_size = len(test.population)
-                for i in range(1,test.population_size):
-                    poprz = -i-1
+                for i in range(1, test.population_size):
+                    poprz = -i - 1
                     if test.population[-i].cost < test.population[poprz].cost:
-                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                        test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
                     else:
                         break
                 test.population = test.population[:-2]

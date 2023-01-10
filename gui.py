@@ -3,13 +3,8 @@ import tkinter.ttk as ttk
 from tkinter import filedialog
 import tkinter.scrolledtext as st
 from tkinter import *
-import matplotlib
-import matplotlib.pyplot as plt
-import numpy as np
 from matplotlib.figure import Figure
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg, NavigationToolbar2Tk
-
-# matplotlib.use("TkAgg")
 
 from algorithm import *
 
@@ -50,6 +45,8 @@ class GUI:
         self.productsData = []
         self.distancesData = []
         self.purchaseSumData = []
+
+        self.purSumDisp = []
 
         self.radioButtonVar = tk.IntVar()
 
@@ -126,8 +123,6 @@ class GUI:
 
         self.notebookSol = ttk.Notebook(self.solFrame, width=330, height=200)
         self.notebookSol.place(x=15, y=270)
-
-
 
         # karty w notatniku
         self.tabW = ttk.Frame(self.notebookData, width=150, height=150)
@@ -355,10 +350,10 @@ class GUI:
             self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
 
         for w in self.shop.wholesalers:
-                    id_ = 0
-                    for p in self.shop.products.items():
-                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
-                        id_ += 1
+            id_ = 0
+            for p in self.shop.products.items():
+                w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
+                id_ += 1
 
     def printPurchaseSummary(self, solution):
         toPrintData = [['Produkt', 'Zapotrzebowanie', 'Zakup', 'Różnica']]
@@ -370,14 +365,33 @@ class GUI:
                     self.purchaseSumData[p] += solution.solution[cID][h][p][1]  # suma zakupionego produktu
 
         for i, p in enumerate(self.productsData):
-            toPrintData.append([p[0], p[1], self.purchaseSumData[i], p[1]-self.purchaseSumData[i]])
+            toPrintData.append([p[0], p[1], self.purchaseSumData[i], p[1] - self.purchaseSumData[i]])
 
-        for i in range(len(toPrintData)):
-            for j in range(len(toPrintData[0])):
-                e = Entry(self.tabDemand, relief=GROOVE, width=15)
-                e.grid(row=i, column=j, sticky=NSEW)
-                e.insert(END, str(toPrintData[i][j]))
-                e.configure(state=DISABLED)
+        if not self.purSumDisp:
+            for i in range(len(toPrintData)):
+                tempLst = []
+                for j in range(len(toPrintData[0])):
+                    e = Entry(self.tabDemand, relief=GROOVE, width=15)
+                    e.grid(row=i, column=j, sticky=NSEW)
+                    e.insert(END, str(toPrintData[i][j]))
+                    e.configure(state=DISABLED)
+                    tempLst.append(e)
+                self.purSumDisp.append(tempLst)
+        else:
+            for i in range(len(self.purSumDisp)):
+                for j in range(len(self.purSumDisp[0])):
+                    self.purSumDisp[i][j].destroy()
+            self.purSumDisp = []
+
+            for i in range(len(toPrintData)):
+                tempLst = []
+                for j in range(len(toPrintData[0])):
+                    e = Entry(self.tabDemand, relief=GROOVE, width=15)
+                    e.grid(row=i, column=j, sticky=NSEW)
+                    e.insert(END, str(toPrintData[i][j]))
+                    e.configure(state=DISABLED)
+                    tempLst.append(e)
+                self.purSumDisp.append(tempLst)
 
     def start(self):
         self.cleanData()
@@ -399,7 +413,8 @@ class GUI:
             self.errorLabel.configure(text='Error:\nuzupełnij parametry')
             conditions += 1
 
-        if not (popVal.isnumeric() and itVal.isnumeric() and penVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace(
+        if not (popVal.isnumeric() and itVal.isnumeric() and penVal.isnumeric() and propM1.replace('.', '',
+                                                                                                   1).isdigit() and propM2.replace(
                 '.', '', 1).isdigit() and propM3.replace('.', '', 1).isdigit() and propM4.replace('.', '', 1).isdigit()
                 and propC.replace('.', '', 1).isdigit()):  # zmienna nie jest liczbą
             self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
