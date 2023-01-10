@@ -60,8 +60,8 @@ class GUI:
         # Frames
         self.paramsFrame = ttk.LabelFrame(self.root, text='Parametry', width=250, height=410)
         self.paramsFrame.place(x=400, y=12)
-        self.propFrame = ttk.LabelFrame(self.paramsFrame, text='Prawdopodobieństwo', width=200, height=265)
-        self.propFrame.place(x=20, y=15)
+        self.propFrame = ttk.LabelFrame(self.paramsFrame, text='Prawdopodobieństwo', width=200, height=255)
+        self.propFrame.place(x=20, y=5)
         self.dataFrame = ttk.LabelFrame(self.root, text='Dane', width=355, height=530)
         self.dataFrame.place(x=20, y=12)
         self.algoFrame = ttk.LabelFrame(self.root, text='Algorytm', width=250, height=102)
@@ -73,8 +73,9 @@ class GUI:
         ttk.Label(self.propFrame, text="Mutacji 3").place(x=20, y=109)
         ttk.Label(self.propFrame, text="Mutacji 4").place(x=20, y=156)
         ttk.Label(self.propFrame, text="Krzyżowania").place(x=20, y=203)
-        ttk.Label(self.paramsFrame, text="Liczebność\npopulacji").place(x=40, y=295)
-        ttk.Label(self.paramsFrame, text="Liczba iteracji").place(x=40, y=353)
+        ttk.Label(self.paramsFrame, text="Liczebność\npopulacji").place(x=40, y=270)
+        ttk.Label(self.paramsFrame, text="Liczba iteracji").place(x=40, y=320)
+        ttk.Label(self.paramsFrame, text="PenalityVal").place(x=40, y=360)
 
         self.pathW = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
         self.pathW.place(x=160, y=13)
@@ -85,8 +86,10 @@ class GUI:
         self.pathD = tk.Label(self.dataFrame, text="Filepath:", justify=LEFT)
         self.pathD.place(x=160, y=193)
 
-        self.errorLabel = tk.Label(root, text=' ', justify=LEFT)
-        self.errorLabel.place(x=1030, y=400)
+        self.errorLabel = tk.Label(self.root, text='', justify=LEFT)
+        self.errorLabel.place(x=1030, y=450)
+        self.penFunValLabel = tk.Label(self.root, text='', justify=LEFT)
+        self.penFunValLabel.place(x=1030, y=350)
 
         # Inputs
         self.inM1 = ttk.Entry(self.propFrame, width=8)
@@ -106,10 +109,13 @@ class GUI:
         self.inK.place(x=110, y=196)
         self.inPop = ttk.Entry(self.paramsFrame, width=8)
         self.inPop.insert(0, '10')
-        self.inPop.place(x=130, y=295)
+        self.inPop.place(x=130, y=270)
         self.inIt = ttk.Entry(self.paramsFrame, width=8)
         self.inIt.insert(0, '10')
-        self.inIt.place(x=130, y=346)
+        self.inIt.place(x=130, y=310)
+        self.inPenVal = ttk.Entry(self.paramsFrame, width=8)
+        self.inPenVal.insert(0, '10')
+        self.inPenVal.place(x=130, y=353)
 
         # Notebook
         self.notebook = ttk.Notebook(self.dataFrame, width=150, height=180)
@@ -329,25 +335,34 @@ class GUI:
                 pass
             self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
 
+        for w in self.shop.wholesalers:
+                    id_ = 0
+                    for p in self.shop.products.items():
+                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
+                        id_ += 1
+
+
     def start(self):
         self.cleanData()
         popVal = self.inPop.get()
         itVal = self.inIt.get()
+        penVal = self.inPenVal.get()
         propM1 = self.inM1.get()
         propM2 = self.inM2.get()
         propM3 = self.inM3.get()
         propM4 = self.inM4.get()
         propC = self.inK.get()
+
         self.errorLabel.configure(text='')
         toplot = None
 
         conditions = 0
 
-        if popVal == '' or itVal == '' or propM1 == '' or propM2 == '' or propM3 == '' or propM4 == '' or propC == '':  # zmienna nie jest wpisana
+        if popVal == '' or itVal == '' or penVal == '' or propM1 == '' or propM2 == '' or propM3 == '' or propM4 == '' or propC == '':  # zmienna nie jest wpisana
             self.errorLabel.configure(text='Error:\nuzupełnij parametry')
             conditions += 1
 
-        if not (popVal.isnumeric() and itVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace(
+        if not (popVal.isnumeric() and itVal.isnumeric() and penVal.isnumeric() and propM1.replace('.', '', 1).isdigit() and propM2.replace(
                 '.', '', 1).isdigit() and propM3.replace('.', '', 1).isdigit() and propM4.replace('.', '', 1).isdigit()
                 and propC.replace('.', '', 1).isdigit()):  # zmienna nie jest liczbą
             self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
@@ -355,6 +370,7 @@ class GUI:
         else:
             popVal = int(popVal)
             itVal = int(itVal)
+            penVal = int(penVal)
             propM1 = float(propM1)
             propM2 = float(propM2)
             propM3 = float(propM3)
@@ -362,7 +378,7 @@ class GUI:
             propC = float(propC)
 
             if propM1 < 0 or propM1 > 1 or propM2 < 0 or propM2 > 1 or propM3 < 0 or propM3 > 1 or propM4 < 0 \
-                    or propM4 > 1 or propC < 0 or propC > 1 or popVal < 0 or itVal < 0:
+                    or propM4 > 1 or propC < 0 or propC > 1 or popVal < 0 or itVal < 0 or penVal < 0:
                 self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
                 conditions += 1
 
@@ -372,12 +388,9 @@ class GUI:
 
         if conditions == 0:
             if self.radioButtonVar.get() == 1:  # algorytm 1
-                for w in self.shop.wholesalers:
-                    id_ = 0
-                    for p in self.shop.products.items():
-                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
-                        id_ += 1
-                solution, toplot = algo(self.shop, itVal, popVal, propM1, propM2, propM3, propM4)
+                solution, toplot = algo(shop=self.shop, iterationStop=itVal, populationSize=popVal, probablityM1=propM1,
+                                        probablityM2=propM2, probablityM3=propM3, probablityM4=propM4,
+                                        probabilityC=propC, penaltyVal=penVal)
 
                 if toplot and solution:
                     solution2print = solution.__str__()
@@ -391,14 +404,15 @@ class GUI:
                     canvas.draw()
                     canvas.get_tk_widget().place(x=670, y=-10)
                     fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
+
+                    tempStr = 'Wartość funkcji celu:\n' + str(solution.cost)
+                    self.penFunValLabel.configure(text=tempStr)
 
             elif self.radioButtonVar.get() == 2:  # algorytm 2
-                for w in self.shop.wholesalers:
-                    id_ = 0
-                    for p in self.shop.products.items():
-                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
-                        id_ += 1
-                solution, toplot = algo2(self.shop, itVal, popVal, propM1, propM2, propM3, propM4, propC)
+                solution, toplot = algo2(shop=self.shop, iterationStop=itVal, populationSize=popVal,
+                                         probablityM1=propM1, probablityM2=propM2, probablityM3=propM3,
+                                         probablityM4=propM4, probabilityC=propC, changesInPopulationValue=50,
+                                         penaltyVal=penVal)
 
                 if toplot and solution:
                     solution2print = solution.__str__()
@@ -412,6 +426,9 @@ class GUI:
                     canvas.draw()
                     canvas.get_tk_widget().place(x=670, y=-10)
                     fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
+
+                    tempStr = 'Wartość funkcji celu:\n' + str(solution.cost)
+                    self.penFunValLabel.configure(text=tempStr)
 
             else:
                 self.errorLabel.configure(text='Error:\nnie wybrano algorytmu')
