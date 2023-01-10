@@ -49,6 +49,7 @@ class GUI:
         self.carsData = []
         self.productsData = []
         self.distancesData = []
+        self.purchaseSumData = []
 
         self.radioButtonVar = tk.IntVar()
 
@@ -59,13 +60,15 @@ class GUI:
         # ===============================WINDOW======================================
         # Frames
         self.paramsFrame = ttk.LabelFrame(self.root, text='Parametry', width=250, height=410)
-        self.paramsFrame.place(x=400, y=12)
+        self.paramsFrame.place(x=390, y=0)
         self.propFrame = ttk.LabelFrame(self.paramsFrame, text='Prawdopodobieństwo', width=200, height=255)
         self.propFrame.place(x=20, y=5)
         self.dataFrame = ttk.LabelFrame(self.root, text='Dane', width=355, height=530)
-        self.dataFrame.place(x=20, y=12)
+        self.dataFrame.place(x=10, y=0)
         self.algoFrame = ttk.LabelFrame(self.root, text='Algorytm', width=250, height=102)
-        self.algoFrame.place(x=400, y=440)
+        self.algoFrame.place(x=390, y=428)
+        self.solFrame = ttk.LabelFrame(self.root, text='Wyniki', width=520, height=530)
+        self.solFrame.place(x=665, y=0)
 
         # Labels
         ttk.Label(self.propFrame, text="Mutacji 1").place(x=20, y=15)
@@ -91,45 +94,55 @@ class GUI:
         self.penFunValLabel = tk.Label(self.root, text='', justify=LEFT)
         self.penFunValLabel.place(x=1030, y=350)
 
-        # Inputs
+        # Inputs (Entry)
         self.inM1 = ttk.Entry(self.propFrame, width=8)
-        self.inM1.insert(0, '0.1')
+        self.inM1.insert(0, '0.2')
         self.inM1.place(x=110, y=8)
         self.inM2 = ttk.Entry(self.propFrame, width=8)
-        self.inM2.insert(0, '0.1')
+        self.inM2.insert(0, '0.2')
         self.inM2.place(x=110, y=55)
         self.inM3 = ttk.Entry(self.propFrame, width=8)
-        self.inM3.insert(0, '0.1')
+        self.inM3.insert(0, '0.2')
         self.inM3.place(x=110, y=102)
         self.inM4 = ttk.Entry(self.propFrame, width=8)
-        self.inM4.insert(0, '0.1')
+        self.inM4.insert(0, '0.2')
         self.inM4.place(x=110, y=149)
         self.inK = ttk.Entry(self.propFrame, width=8)
         self.inK.insert(0, '0.98')
         self.inK.place(x=110, y=196)
         self.inPop = ttk.Entry(self.paramsFrame, width=8)
-        self.inPop.insert(0, '10')
+        self.inPop.insert(0, '15')
         self.inPop.place(x=130, y=270)
         self.inIt = ttk.Entry(self.paramsFrame, width=8)
         self.inIt.insert(0, '10')
         self.inIt.place(x=130, y=310)
         self.inPenVal = ttk.Entry(self.paramsFrame, width=8)
-        self.inPenVal.insert(0, '10')
+        self.inPenVal.insert(0, '100')
         self.inPenVal.place(x=130, y=353)
 
         # Notebook
-        self.notebook = ttk.Notebook(self.dataFrame, width=150, height=180)
-        self.notebook.place(x=20, y=290)
+        self.notebookData = ttk.Notebook(self.dataFrame, width=150, height=180)
+        self.notebookData.place(x=20, y=290)
+
+        self.notebookSol = ttk.Notebook(self.solFrame, width=330, height=200)
+        self.notebookSol.place(x=15, y=270)
+
+
 
         # karty w notatniku
-        self.tabW = ttk.Frame(self.notebook, width=150, height=150)
-        self.notebook.add(self.tabW, text='Hurtownie')
-        self.tabC = ttk.Frame(self.notebook, width=150, height=150)
-        self.notebook.add(self.tabC, text='Samochody')
-        self.tabP = ttk.Frame(self.notebook, width=150, height=150)
-        self.notebook.add(self.tabP, text='Produkty')
-        self.tabD = ttk.Frame(self.notebook, width=150, height=150)
-        self.notebook.add(self.tabD, text='Dystanse')
+        self.tabW = ttk.Frame(self.notebookData, width=150, height=150)
+        self.notebookData.add(self.tabW, text='Hurtownie')
+        self.tabC = ttk.Frame(self.notebookData, width=150, height=150)
+        self.notebookData.add(self.tabC, text='Samochody')
+        self.tabP = ttk.Frame(self.notebookData, width=150, height=150)
+        self.notebookData.add(self.tabP, text='Produkty')
+        self.tabD = ttk.Frame(self.notebookData, width=150, height=150)
+        self.notebookData.add(self.tabD, text='Dystanse')
+
+        self.tabSol = ttk.Frame(self.notebookSol, width=250, height=200)
+        self.notebookSol.add(self.tabSol, text='Rozwiązanie')
+        self.tabDemand = ttk.Frame(self.notebookSol, width=250, height=200)
+        self.notebookSol.add(self.tabDemand, text='Pokrycie zapotrzebowania')
 
         # scrolled texts
         self.scrtextW = st.ScrolledText(self.tabW, width=45, height=12, state='disabled')
@@ -140,8 +153,13 @@ class GUI:
         self.scrtextP.pack()
         self.scrtextD = st.ScrolledText(self.tabD, width=45, height=12, state='disabled')
         self.scrtextD.pack()
-        self.scrtextSolution = st.ScrolledText(self.root, width=55, height=14.5, state='disabled')
-        self.scrtextSolution.place(x=670, y=313)
+
+        self.scrtextSolution = st.ScrolledText(self.tabSol, width=60, height=12.5, state='disabled')
+        self.scrtextSolution.pack()
+        # self.scrtextDemand = st.ScrolledText(self.tabDemand, width=60, height=12.5, state='disabled')
+        # self.scrtextDemand.pack()
+
+        self.printPurchase = Entry(self.tabDemand, relief=GROOVE)
 
         # Buttons
         self.get_wholB = ttk.Button(self.dataFrame, text='Wgraj hurtownie', style='Accentbutton',
@@ -255,6 +273,7 @@ class GUI:
         self.carsData = []
         self.productsData = []
         self.distancesData = []
+        self.purchaseSumData = []
 
         if not self.distancesFilePath:
             with open('Data/distances.txt', mode="r", encoding="utf-8") as input_file:
@@ -341,6 +360,24 @@ class GUI:
                         w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
                         id_ += 1
 
+    def printPurchaseSummary(self, solution):
+        toPrintData = [['Produkt', 'Zapotrzebowanie', 'Zakup', 'Różnica']]
+        self.purchaseSumData = [0] * len(solution.solution[0][0])
+
+        for cID, car in enumerate(solution.solution):  # iteracja po samochodach
+            for p in range(len(solution.solution[cID][0])):  # iteracja po produktach (kolumnach)
+                for h in range(len(solution.paths[cID])):  # iteracja po hurtowniach (wierszach)
+                    self.purchaseSumData[p] += solution.solution[cID][h][p][1]  # suma zakupionego produktu
+
+        for i, p in enumerate(self.productsData):
+            toPrintData.append([p[0], p[1], self.purchaseSumData[i], p[1]-self.purchaseSumData[i]])
+
+        for i in range(len(toPrintData)):
+            for j in range(len(toPrintData[0])):
+                e = Entry(self.tabDemand, relief=GROOVE, width=15)
+                e.grid(row=i, column=j, sticky=NSEW)
+                e.insert(END, str(toPrintData[i][j]))
+                e.configure(state=DISABLED)
 
     def start(self):
         self.cleanData()
@@ -379,11 +416,11 @@ class GUI:
 
             if propM1 < 0 or propM1 > 1 or propM2 < 0 or propM2 > 1 or propM3 < 0 or propM3 > 1 or propM4 < 0 \
                     or propM4 > 1 or propC < 0 or propC > 1 or popVal < 0 or itVal < 0 or penVal < 0:
-                self.errorLabel.configure(text='Error:\nniepoprawna wartość parametru')
+                self.errorLabel.configure(text='Error:\nniepoprawna wartość\nparametru')
                 conditions += 1
 
         if self.wholsalersData == [] or self.carsData == [] or self.productsData == [] or self.distancesData == []:  # nie ma wgranych danych
-            self.errorLabel.configure(text='Error:\nniekompletne pliki z danymi')
+            self.errorLabel.configure(text='Error:\nniekompletne pliki\nz danymi')
             conditions += 1
 
         if conditions == 0:
@@ -399,10 +436,12 @@ class GUI:
                     self.scrtextSolution.insert(tk.INSERT, solution2print)
                     self.scrtextSolution.configure(state='disabled')
 
-                    fig = Figure(figsize=(5.5, 3), dpi=100)
+                    self.printPurchaseSummary(solution)
+
+                    fig = Figure(figsize=(4.9, 2.6), dpi=100)
                     canvas = FigureCanvasTkAgg(fig, master=self.root)  # A tk.DrawingArea.
                     canvas.draw()
-                    canvas.get_tk_widget().place(x=670, y=-10)
+                    canvas.get_tk_widget().place(x=690, y=15)
                     fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
 
                     tempStr = 'Wartość funkcji celu:\n' + str(solution.cost)
@@ -421,14 +460,16 @@ class GUI:
                     self.scrtextSolution.insert(tk.INSERT, solution2print)
                     self.scrtextSolution.configure(state='disabled')
 
-                    fig = Figure(figsize=(5.5, 3), dpi=100)
+                    self.printPurchaseSummary(solution)
+
+                    fig = Figure(figsize=(4.9, 2.6), dpi=100)
                     canvas = FigureCanvasTkAgg(fig, master=self.root)  # A tk.DrawingArea.
                     canvas.draw()
-                    canvas.get_tk_widget().place(x=670, y=-10)
+                    canvas.get_tk_widget().place(x=690, y=15)
                     fig.add_subplot(111).plot(np.linspace(1, itVal, itVal, endpoint=True), toplot)
 
                     tempStr = 'Wartość funkcji celu:\n' + str(solution.cost)
                     self.penFunValLabel.configure(text=tempStr)
 
             else:
-                self.errorLabel.configure(text='Error:\nnie wybrano algorytmu')
+                self.errorLabel.configure(text='Error:\nnie wybrano\nalgorytmu')

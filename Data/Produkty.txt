@@ -1,5 +1,5 @@
 Parówki 60
-Papier_Toaletowy 99
+Papier 99
 Herbata 70
 Czekolada 35
 Olej 43

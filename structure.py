@@ -283,7 +283,7 @@ class Sample:
                 # print(f"Returns in shop {self.paths[j][i].id} : {returns}")
                 self.cost += returns * self.paths[j][0].distances[-1]
         for index, value in enumerate(demand.values()):
-            self.cost +=   penalty_val * int(1.1 **(abs(value)//10))
+            self.cost += penalty_val * int(1.1 ** (abs(value)))
             # print(f"Penalty function value for product: {abs(value) * punish_val} ")
         # print(f"{[self.shop.products[key] for key in self.shop.products.keys()]}")
         # print("Ending delivery.")
