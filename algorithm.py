@@ -129,7 +129,7 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                     test.population[-1] = tempSample
                     test.sort()
 
-            if crossoverP < CROSSOVER_PROBABILITY:
+            if crossoverP <= CROSSOVER_PROBABILITY:
                 s1 = fractional_probability(test)
                 s2 = fractional_probability(test)
                 child1, child2 = test.crossover(copy.copy(test.population[s1]),copy.copy(test.population[s2]))
