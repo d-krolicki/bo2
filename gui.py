@@ -336,8 +336,10 @@ class GUI:
             self.shop.add_wholesaler(Wholesaler(lines[:-1], self.shop.max_id_hurt, self.distancesData[count]))
 
         for w in self.shop.wholesalers:
-            for p in self.shop.products:
-                w.add_product_for_wholesaler(p, randint(0, 100))
+                    id_ = 0
+                    for p in self.shop.products.items():
+                        w.add_product_for_wholesaler(Product(p[0], randint(1, 10), id_), np.inf)
+                        id_ += 1
 
 
     def start(self):

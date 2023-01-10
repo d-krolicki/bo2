@@ -81,10 +81,10 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
     MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT = probablityM3
     MUTATION_PROBABILITY_SUBTRACT_AMOUNT = probablityM4
     toplot = []
+    calculate_cost_fun(test, penaltyVal)  # obliczanie funkcji celu do osobników oraz sortowanie
     while iterationStop > 0:  # liczba iteracji STOP
         changesInPopulation = changesInPopulationValue
         while changesInPopulation > 0:  # liczba podjętych prób zmian w populacji
-            calculate_cost_fun(test, penaltyVal)  # obliczanie funkcji celu do osobników oraz sortowanie
 
             # prawdopodobieństwa mutacji i krzyżówki
             mutation1P = random()
@@ -100,7 +100,12 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)  # obliczenie jego funkcji celu
                 if tempSample.cost < test.population[-1].cost:  # dodanie do populacji jeśli jest lepszy od najgorszego
                     test.population[-1] = tempSample
-                    test.sort()  # sortowanie
+                    for i in range(1,test.population_size):
+                        poprz = -i-1
+                        if test.population[-i].cost < test.population[poprz].cost:
+                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                        else:
+                            break
 
             if mutation2P < MUTATION_PROBABILITY_VISIT_ORDER:
                 s = fractional_probability(test)
@@ -109,7 +114,12 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
-                    test.sort()
+                    for i in range(1,test.population_size):
+                        poprz = -i-1
+                        if test.population[-i].cost < test.population[poprz].cost:
+                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                        else:
+                            break
 
             if mutation3P < MUTATION_PROBABILITY_ADD_OR_REMOVE_POINT:
                 s = fractional_probability(test)
@@ -118,7 +128,12 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
-                    test.sort()
+                    for i in range(1,test.population_size):
+                        poprz = -i-1
+                        if test.population[-i].cost < test.population[poprz].cost:
+                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                        else:
+                            break
 
             if mutation4P < MUTATION_PROBABILITY_SUBTRACT_AMOUNT:
                 s = fractional_probability(test)
@@ -127,22 +142,37 @@ def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probab
                 tempSample.objective_function(penaltyVal)
                 if tempSample.cost < test.population[-1].cost:
                     test.population[-1] = tempSample
-                    test.sort()
-
+                    for i in range(1,test.population_size):
+                        poprz = -i-1
+                        if test.population[-i].cost < test.population[poprz].cost:
+                                test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                        else:
+                            break
             if crossoverP < CROSSOVER_PROBABILITY:
                 s1 = fractional_probability(test)
                 s2 = fractional_probability(test)
-                child1, child2 = test.crossover(copy.deepcopy(test.population[s1]),copy.copy(test.population[s2]))
+                child1, child2 = test.crossover(copy.deepcopy(test.population[s1]),copy.deepcopy(test.population[s2]))
                 child1.objective_function(penaltyVal)
                 child2.objective_function(penaltyVal)
                 test.population.append(child1)
+                test.population_size = len(test.population)
+                for i in range(1,test.population_size):
+                    poprz = -i-1
+                    if test.population[-i].cost < test.population[poprz].cost:
+                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                    else:
+                        break
                 test.population.append(child2)
                 test.population_size = len(test.population)
-                calculate_cost_fun(test, penaltyVal)
+                for i in range(1,test.population_size):
+                    poprz = -i-1
+                    if test.population[-i].cost < test.population[poprz].cost:
+                            test.population[-i], test.population[poprz] = test.population[poprz], test.population[-i]
+                    else:
+                        break
                 test.population = test.population[:-2]
                 test.population_size = len(test.population)
 
-            calculate_cost_fun(test, penaltyVal)
             changesInPopulation -= 1
 
         toplot.append(test.population[0].cost)

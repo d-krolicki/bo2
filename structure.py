@@ -73,7 +73,7 @@ class Wholesaler:
         :param amount: Amount of added objects.
         :return: None
         """
-        self.products[product] = [product.id, product.price + round(uniform(-product.price /2, product.price/2)), amount]
+        self.products[product.name] = [product.id, product.price + round(uniform(-product.price /2, product.price/2)), amount]
 
 
 class Shop:
@@ -116,7 +116,7 @@ class Shop:
         :param demand: Demand for the product being added.
         :return: None
         """
-        self.products[product] = demand
+        self.products[product.name] = demand
         self.max_id_prod += 1
 
     def add_car(self, car: Car):
@@ -222,8 +222,8 @@ class Sample:
             if add_or_sub:
                 wholesaler = choices(self.shop.wholesalers, k=1)[0]
                 self.solution[car].insert(stop_place, [])
-                for product in wholesaler.products:
-                    self.solution[car][stop_place].append((product, randint(0, np.round(213.7))))
+                for product_name in wholesaler.products:
+                    self.solution[car][stop_place].append((Product(product_name, wholesaler.products[product_name][1], wholesaler.products[product_name][0]), randint(0, np.round(213.7))))
                 self.paths[car].insert(stop_place, wholesaler)
             else:
                 if len(self.solution[car]) > 1:
@@ -234,9 +234,9 @@ class Sample:
             car = randint(0, len(self.solution) - 1)
             stop_place = randint(0, len(self.solution[car]) - 1)
             product = randint(0, len(self.solution[car][stop_place]) - 1)
-            val = randint(0, abs(self.shop.products[self.solution[car][stop_place][product][0]] -
+            val = randint(0, abs(self.shop.products[self.solution[car][stop_place][product][0].name] -
                                  self.solution[car][stop_place][product][1]))
-            if self.shop.products[self.solution[car][stop_place][product][0]] - self.solution[car][stop_place][product][
+            if self.shop.products[self.solution[car][stop_place][product][0].name] - self.solution[car][stop_place][product][
                 1] < 0:
                 val = val * (-1)
             self.solution[car][stop_place][product] = self.solution[car][stop_place][product][0], \
@@ -266,8 +266,8 @@ class Sample:
                 # print(shopping_list)
                 for tup in shopping_list:
                     # pass
-                    self.cost += tup[1] * self.paths[j][i].products[tup[0]][1]
-                    demand[tup[0]] -= tup[1]
+                    self.cost += tup[1] * self.paths[j][i].products[tup[0].name][1]
+                    demand[tup[0].name] -= tup[1]
                     sum_weight_of_prod += tup[1]
                 try:
                     # print(
@@ -327,8 +327,8 @@ class Population:
                 solution[car].append([])
             i = 0
             for w in path:  # iteracja po ID hurtowni
-                for product in w.products:
-                    solution[car][i].append((product, randint(0, np.round(50))))
+                for product in w.products.keys():
+                    solution[car][i].append((Product(product, w.products[product][1], w.products[product][0]), randint(0, np.round(50))))
                 i += 1
         return Sample(shop=self.shop, solution=solution, paths=paths)
 
@@ -395,7 +395,7 @@ class Population:
             self.population.append(self.initial_sample())
 
     def sort(self):
-        lst = copy.copy(self.population)
+        lst = copy.deepcopy(self.population)
         lst_sorted = sorted(lst, key=lambda sample: sample.cost)
         self.population = lst_sorted
         # print(self.population[0])
