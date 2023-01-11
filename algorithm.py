@@ -66,7 +66,7 @@ def algo(shop: Shop, iterationStop: int = 10, populationSize: int = 10, probabli
             najlepszy = test.population[0]
         zmiana_najlepszego_osobnika.append(najlepszy.cost)
 
-    return najlepszy, zmiana_najlepszego_osobnika
+    return najlepszy, toplot
 
 
 def algo2(shop: Shop, iterationStop: int = 10, populationSize: int = 100, probablityM1: float = 0.1,
