@@ -283,7 +283,10 @@ class Sample:
                 # print(f"Returns in shop {self.paths[j][i].id} : {returns}")
                 self.cost += returns * self.paths[j][0].distances[-1]
         for index, value in enumerate(demand.values()):
-            self.cost += penalty_val * int(1.1 ** (abs(value)))
+            try:
+                self.cost += penalty_val * int(1.1 ** (abs(value)))
+            except OverflowError:
+                self.cost += penalty_val * (abs(value))
             # print(f"Penalty function value for product: {abs(value) * punish_val} ")
         # print(f"{[self.shop.products[key] for key in self.shop.products.keys()]}")
         # print("Ending delivery.")
@@ -353,6 +356,11 @@ class Population:
         child2 = []
         path_child1 = []
         path_child2 = []
+  
+        if parent1 == None :
+            parent1 = self.initial_sample()
+        if parent2 == None:
+            parent2 = self.initial_sample()
         for car in range(len(parent1.solution)):
             child1.append([]), child2.append([]), path_child1.append([]), path_child2.append([])
             cross_place = randint(0, min(len(parent1.solution[car]), len(parent2.solution[car])))
@@ -376,6 +384,7 @@ class Population:
         child1 = Sample(self.shop, child1, path_child1)
         child2 = Sample(self.shop, child2, path_child2)
         return child1, child2
+
 
     def initial_population(self):
         """
